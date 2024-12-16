@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria de Fotos</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+
+<body onload="loadPhotos(); orderedImages(); seeCol(); seeSimul(); changes();">
+    <header id="topbar">
+        
+        <div id="search-container">
+            <input id="search-container-input" type="text" placeholder="Pesquisar...">
+            <img src="https://img.icons8.com/ios-filled/50/000000/search--v1.png" alt="Lupa">
+        </div>
+
+        <div class="b3" id="space">
+            <a href="import.html" id="space1"><img src="images/sidebar/import.png"></a>
+            <a onclick="loadSettings(5);" href="settings.html" id="space2"><img src="images/sidebar/help.png"></a>
+        </div>
+    </header>
+
+
+
+    <aside id="sidebar">
+        <div class="b" id="createAlbum2"><img src="images/sidebar/create.png"></div>
+        <div class="b" id="trashPut"><img src="images/sidebar/trash.png"></div>
+        <div class="b" id="privatePut"><img src="images/sidebar/private.png"></div>
+        <div class="b" id="tudoPut"><p>Tudo</p></div>
+
+
+
+
+        <button onclick="loadSettings(2); window.location.href='settings.html';" onmouseover="preloadPage('settings.html')">
+            <img id="account" src="images/sidebar/account.jpg" title="Conta">
+        </button>
+
+        <div id="hr-top"></div>
+
+        <button onclick="window.location.href='index.html';" onmouseover="preloadPage('index.html')">
+            <img id="home-a" src="images/sidebar/images.png" title="Fotos">
+        </button>
+
+        <button onclick="window.location.href='archive.html';" onmouseover="preloadPage('archive.html')">
+            <img id="archive" src="images/sidebar/albuns.png" title="Álbuns">
+        </button>
+
+        <button onclick="window.location.href='private.html';" onmouseover="preloadPage('private-enter.html')">
+            <img id="private" src="images/sidebar/private.png" title="Privado">
+        </button>
+
+        <button onclick="window.location.href='trash.html';" onmouseover="preloadPage('chat.html')">
+            <img id="chat" src="images/sidebar/trash.png" title="Partilhados">
+        </button>
+
+        <div id="hr-bottom"></div>
+
+        <button id="last" onclick="window.location.href='settings.html';" onmouseover="preloadPage('settings.html')">
+            <img id="settings-b" src="images/sidebar/settings.png" title="Definições">
+        </button>
+    </aside>
+
+
+    
+    <main id="content">
+        <div id="gallery">
+            <h3 style="margin-bottom: 0.5em;"> &#8226 Segunda-Feira, 23/09</h3>
+
+            <div id="date0"></div>
+
+            <h3 style="margin-bottom: 0.5em; margin-top: 1.5em;"> &#8226 Sábado, 21/09</h3>
+
+            <div id="date1"></div>
+
+            <h3 style="margin-bottom: 0.5em; margin-top: 1.5em;"> &#8226 Sexta-Feira, 20/09</h3>
+
+            <div id="date2"></div>
+
+            <h3 style="margin-bottom: 0.5em; margin-top: 1.5em;"> &#8226 Terça-Feira, 17/09</h3>
+
+            <div id="date3"></div>
+
+            <h3 style="margin-bottom: 0.5em; margin-top: 1.5em;"> &#8226 Sábado, 16/09</h3>
+
+            <div id="date4"></div>
+
+            <h3 style="margin-bottom: 0.5em; margin-top: 1.5em;"> &#8226 Sábado, 07/09</h3>
+
+            <div id="date5"></div>
+
+            <h3 style="margin-bottom: 0.5em; margin-top: 1.5em;"> &#8226 Sexta-Feira, 10/08</h3>
+
+            <div id="date6"></div>
+
+            <h3 style="margin-bottom: 0.5em; margin-top: 1.5em;"> &#8226 Sexta-Feira, 02/08</h3>
+
+            <div id="date7"></div>
+
+            <h3 style="margin-bottom: 0.5em; margin-top: 1.5em;"> &#8226 Quarta-Feira, 19/07</h3>
+
+            <div id="date8"></div>
+
+            <h3 style="margin-bottom: 0.5em; margin-top: 1.5em;"> &#8226 Sábado, 10/07</h3>
+
+            <div id="date9"></div>
+        </div>
+
+    </main>
+
+
+    <script>
+        let totalClicks = 0;
+        let checked = 1;
+        let clickSee = true;
+        let tudoSee = false;
+
+        function seeSimul() {
+            if (localStorage.getItem('simul')==1){
+                const photoDiv = document.querySelector('.photo');
+                    photoDiv.querySelector('.selected2').style.backgroundColor = "#ffffff";
+                    photoDiv.querySelector('.selected-b').style.backgroundColor = "#3d3d3d";
+                    const IMG= "images"+photoDiv.querySelector('img').src.split("/images")[1];
+
+                    tudo = JSON.parse(localStorage.getItem('tudo'));
+
+                    tudo.push(IMG);
+                    localStorage.setItem('tudo', JSON.stringify(tudo));
+                    localStorage.setItem('simul', 0);
+            }
+        }
+
+        function loadSettings(number){
+            localStorage.setItem('loadSettings', number);
+        }
+
+
+
+        localStorage.setItem("tudo", JSON.stringify([]))
+        let tudo = JSON.parse(localStorage.getItem("tudo"));
+    
+
+        console.log(tudo);
+
+        const tudoPut = document.getElementById("tudoPut");
+        const createAlbum2 = document.getElementById("createAlbum2");
+        const trashPut = document.getElementById("trashPut");
+        const privatePut = document.getElementById("privatePut");
+
+        let currentMatchIndex = -1; // Tracks the current match index
+        let matches = []; // Stores all match elements
+
+        const searchInput = document.getElementById("search-container-input");
+
+        // Function to highlight matches and scroll to the first one
+        searchInput.addEventListener("input", function () {
+            const searchTerm = this.value.toLowerCase();
+            const paragraphs = document.querySelectorAll("h3");
+
+            // Reset matches and highlights
+            matches = [];
+            currentMatchIndex = -1;
+            paragraphs.forEach(paragraph => {
+                paragraph.innerHTML = paragraph.textContent; // Clear previous highlights
+            });
+
+            // Highlight new matches and store them
+            if (searchTerm) {
+                paragraphs.forEach(paragraph => {
+                    const regex = new RegExp(`(${searchTerm})`, "gi");
+                    paragraph.innerHTML = paragraph.textContent.replace(regex, `<mark>$1</mark>`);
+                });
+
+                // Find all matches and store them
+                matches = Array.from(document.querySelectorAll("mark"));
+
+                // Scroll to the first match if it exists
+                if (matches.length > 0) {
+                    currentMatchIndex = 0;
+                    matches[currentMatchIndex].scrollIntoView({ behavior: "smooth", block: "center" });
+                }
+            }
+        });
+
+        // Function to go to the next match
+        function goToNextMatch() {
+            if (matches.length > 0) {
+                // Increment the index
+                currentMatchIndex = (currentMatchIndex + 1) % matches.length;
+                // Scroll to the next match
+                matches[currentMatchIndex].scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+        }
+
+        // Listen for the Enter key
+        searchInput.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault(); // Prevent the default Enter action (e.g., form submission)
+                goToNextMatch(); // Go to the next match
+            }
+        });
+
+        function preloadPage(url) {
+            // Preload the HTML of the page
+            if (!document.querySelector(`link[rel="prefetch"][href="${url}"]`)) {
+                const link = document.createElement("link");
+                link.rel = "prefetch";
+                link.href = url;
+                document.head.appendChild(link);
+                console.log(`Pré-carregando HTML: ${url}`);
+            }
+
+            // Optionally preload JavaScript related to the page
+            preloadJavaScript(url);
+        }
+
+        function preloadJavaScript(pageUrl) {
+            // Map of pages to their corresponding JS files
+            const jsMap = {
+                "pagina2.html": ["script1.js", "script2.js"], // Add your mappings here
+            };
+
+            const scripts = jsMap[pageUrl];
+            if (scripts) {
+                scripts.forEach((scriptUrl) => {
+                    if (!document.querySelector(`script[src="${scriptUrl}"]`)) {
+                        const script = document.createElement("script");
+                        script.src = scriptUrl;
+                        script.async = true; // Load script asynchronously
+                        script.defer = true; // Execute after parsing HTML
+                        document.head.appendChild(script);
+                        console.log(`Pré-carregando JS: ${scriptUrl}`);
+                    }
+                });
+            }
+        }
+
+        function seeCol(){
+            if (localStorage.getItem('primaryColor') != null){
+                const divS = document.querySelectorAll('.album');
+                divS.forEach(div => {
+                    div.style.backgroundColor = localStorage.getItem('primaryColor');
+                });
+
+            }    
+            
+            else{
+                const divS = document.querySelectorAll('.album');
+                divS.forEach(div => {
+                    div.style.backgroundColor = "#ffffff";
+                });
+            }
+
+
+            if (localStorage.getItem('bordersPri') != null){
+                const b = document.querySelectorAll('.b');
+                b.forEach(div => {
+                    div.style.backgroundColor = localStorage.getItem('bordersPri');
+                });
+
+            }    
+            
+            else{
+                const b = document.querySelectorAll('.b');
+                b.forEach(div => {
+                    div.style.backgroundColor = "#e0e0e0";
+                });
+            }
+
+            if (localStorage.getItem('bordersSec') != null){
+                const b = document.querySelectorAll('.b');
+                b.forEach(div => {
+                    div.style.borderColor = localStorage.getItem('bordersSec');
+                });
+            }    
+            
+            else{
+                const b = document.querySelectorAll('.b');
+                b.forEach(div => {
+                    div.style.borderColor = "#9c9c9c";
+                });
+            }
+
+            if (localStorage.getItem('secondaryColor') != null){
+                const b = document.querySelectorAll('.b3');
+                b.forEach(div => {
+                    div.style.borderColor = localStorage.getItem('secondaryColor');
+                });
+            }    
+            
+            else{
+                const b = document.querySelectorAll('.b3');
+                b.forEach(div => {
+                    div.style.borderColor = "#ffffff";
+                });
+            }
+
+        }
+
+        function changeColor(num){
+            const selectedElements = document.querySelectorAll('.selected2');
+
+            if (num==1){
+                selectedElements.forEach(element => {
+                    element.style.backgroundColor = "#ffffff"; 
+                });
+            }
+
+            else if (num==0){
+                selectedElements.forEach(element => {
+                    element.style.backgroundColor = "transparent"; 
+                });
+            }
+        }
+
+
+        function orderedImages(){
+            const items = document.querySelectorAll('.photo');
+            var orderedImages = [];
+
+            items.forEach((item) => {
+                const imageNN = "images"+item.querySelector('img').src.split("/images")[1]
+                orderedImages.push(imageNN);
+            });
+
+            localStorage.setItem('orderedImages', JSON.stringify(orderedImages));
+        };
+
+
+        tudoPut.onclick = function() {
+            event.stopPropagation();
+            const tudoParagraph = document.querySelector("#tudoPut p");
+            const items = document.querySelectorAll('.photo');
+
+            if (tudoSee==0){
+                tudoPut.style.backgroundColor = "#9c9c9c"
+                tudoParagraph.textContent = "Nada";
+
+                items.forEach((item) => {
+                    const Nitem = item.querySelector('.selected-b')
+                    const Bitem = item.querySelector('.selected2')
+
+                    Nitem.style.backgroundColor = '#3d3d3d';
+                    Bitem.style.backgroundColor = '#ffffff';
+
+                    const imageN = "images"+item.querySelector('img').src.split("/images")[1]
+                    tudo.push(imageN);
+                });
+
+                tudo = JSON.parse(localStorage.getItem("imageFiles"))
+                localStorage.setItem('tudo', JSON.stringify(tudo));
+                tudoSee = true;
+                checked = 1;
+                clickSee = false;
+                totalClicks = JSON.parse(localStorage.getItem("imageFiles")).length;
+
+            }
+
+            else{
+                tudoPut.style.backgroundColor = "#e0e0e0"
+                tudoParagraph.textContent = "Tudo";
+                privatePut.style.visibility = 'hidden';
+                tudoPut.style.visibility = 'hidden';
+                trashPut.style.visibility = 'hidden';
+                createAlbum2.style.visibility = 'hidden';
+
+                items.forEach((item) => {
+                    const Nitem = item.querySelector('.selected-b')
+                    const Bitem = item.querySelector('.selected2')
+                    
+                    Nitem.style.backgroundColor = 'transparent';
+                    Bitem.style.backgroundColor = 'transparent';
+
+                    const imageN = "images"+item.querySelector('img').src.split("/images")[1]
+                    tudo = tudo.filter(num => num !== imageN);
+                });
+
+                localStorage.setItem('tudo', JSON.stringify(tudo));
+                tudoSee = false;
+                checked = 0;
+                clickSee = true;
+                totalClicks = 0;
+            }
+
+        }
+
+        createAlbum2.onclick = function() {
+            event.stopPropagation();
+            tudo = JSON.parse(localStorage.getItem("tudo"));
+            localStorage.setItem('createA', JSON.stringify(tudo))
+
+            window.location.href='./create-album.html';
+        }
+
+        trashPut.onclick = function() {
+            event.stopPropagation();
+            var seeT = 0;
+
+            if (localStorage.getItem("trash") != null){
+                var trash = JSON.parse(localStorage.getItem("trash"));
+                seeT = 0;
+            }
+            else{
+                localStorage.setItem("trash", JSON.stringify([]))
+                var trash = JSON.parse(localStorage.getItem("trash"));
+                seeT = 1;
+            }
+
+            tudo = JSON.parse(localStorage.getItem("tudo"));
+
+            const NOTmatchedStrings = [];
+            const imageFiles = JSON.parse(localStorage.getItem('imageFiles'));
+
+
+
+            for (let str2 of imageFiles) { // Compare with each element in the second list
+                if (!tudo.includes(str2)) { // Check if str2 is NOT in list1
+                    NOTmatchedStrings.push(str2); // Add matching string from list2   
+                }
+            }
+
+            if (seeT == 0){
+                trash.forEach(t => {
+                    tudo.push(t);
+                });
+            }
+
+            window.location.href="trash.html";
+            localStorage.setItem('trash', JSON.stringify(tudo))
+            localStorage.setItem('imageFiles', JSON.stringify(NOTmatchedStrings))
+        };
+
+
+
+
+        privatePut.onclick = function() {
+            event.stopPropagation();
+
+            var seeP = 0;
+
+            if (localStorage.getItem("private") != null){
+                var private = JSON.parse(localStorage.getItem("private"));
+                seeP = 0;
+            }
+            else{
+                localStorage.setItem("private", JSON.stringify([]))
+                var private = JSON.parse(localStorage.getItem("private"));
+                seeP = 1;
+            }
+
+            tudo = JSON.parse(localStorage.getItem("tudo"));
+
+            const NOTmatchedStrings = [];
+            const imageFiles = JSON.parse(localStorage.getItem('imageFiles'));
+
+
+
+            for (let str2 of imageFiles) { // Compare with each element in the second list
+                if (!tudo.includes(str2)) { // Check if str2 is NOT in list1
+                    NOTmatchedStrings.push(str2); // Add matching string from list2   
+                }
+            }
+
+
+            if (seeP == 0){
+                private.forEach(p => {
+                    tudo.push(p);
+                });
+            }
+
+
+            window.location.href="private.html";
+            localStorage.setItem('private', JSON.stringify(tudo))
+            localStorage.setItem('imageFiles', JSON.stringify(NOTmatchedStrings))
+        };
+
+
+
+
+        function loadPhotos() {
+            let imageFiles
+
+            if (localStorage.getItem("imageFiles") != null) {
+                imageFiles = JSON.parse(localStorage.getItem("imageFiles"));
+                processImages();
+            }
+            else{
+                const photos = [];
+                const albuns = ["Restaurante", "Galeria", "Livros"];
+
+                fetch('info/images.json')
+                    .then(response => response.json())
+                    .then(data => {
+
+                        var imageFi = [];
+                        albuns.forEach(album => {
+                            const currentPath = 'images/galeria/1pre/'+String(album)+'/';
+                            const Data = data[0]["1pre"][0][album];
+
+                            for (let i = 1; i <= Data; i++) {
+                                let imageFile = currentPath+`P${i.toString().padStart(3, '0')}.jpg`;
+                                imageFi.push(imageFile);
+                            }
+                        });
+                        localStorage.setItem("imageFiles", JSON.stringify(imageFi));
+
+                        processImages();
+                    });
+            }
+        }
+
+
+        function processImages(){
+            const imageFiles = JSON.parse(localStorage.getItem("imageFiles"));
+
+            imageFiles.forEach(image => {
+                const numm = image.split('/');
+                const numSee = numm[numm.length - 1].split('.')[0].split('P')[1];
+                const numLast = 9 - parseInt(numSee.substring(numSee.length - 1));
+                const date = document.getElementById(`date${numLast}`);
+                const link = image.split('galeria/')[1];
+                
+                const photoDiv = document.createElement('div');
+                photoDiv.classList.add('photo');
+
+                const div1 = document.createElement('div');
+                div1.classList.add('selected-b');
+
+                const div2 = document.createElement('div');
+                div2.classList.add('selected2');
+
+                div2.appendChild(div1);
+
+                const imgElement = document.createElement('img');
+                imgElement.src = image;
+                imgElement.alt = "Photo12";
+
+                photoDiv.appendChild(div2);
+                photoDiv.appendChild(imgElement);
+                date.appendChild(photoDiv);
+
+
+                var tudo = JSON.parse(localStorage.getItem('tudo'));
+                const colorO = photoDiv.querySelector('.selected2').style.backgroundColor;
+                const colorI = photoDiv.querySelector('.selected-b').style.backgroundColor;
+                const IMG= "images"+photoDiv.querySelector('img').src.split("/images")[1];
+
+
+
+
+                photoDiv.addEventListener('mouseover', () => {
+                    event.stopPropagation();
+
+                    photoDiv.querySelector('.selected2').style.backgroundColor = "#ffffff";
+
+                    if (JSON.parse(localStorage.getItem('tudo')).length>0) {
+                        photoDiv.querySelector('.selected-b').style.backgroundColor = "#9c9c9c";
+                        privatePut.style.visibility = 'visible';    
+                        tudoPut.style.visibility = 'visible';
+                        trashPut.style.visibility = 'visible';
+                        createAlbum2.style.visibility = 'visible';
+
+                        photoDiv.onclick = function() {
+                            event.stopPropagation();
+                            tudo = JSON.parse(localStorage.getItem('tudo'));
+
+                            if (tudo.indexOf(IMG) == -1){
+                                tudo.push(IMG);
+                                localStorage.setItem('tudo', JSON.stringify(tudo));
+                            }
+                            else {
+                                photoDiv.querySelector('.selected-b').style.backgroundColor = "transparent";
+                                tudo = tudo.filter(num => num !== IMG);
+                                localStorage.setItem('tudo', JSON.stringify(tudo));
+
+                            }
+
+                            if (JSON.parse(localStorage.getItem('tudo')).length>0) {
+                                privatePut.style.visibility = 'visible';    
+                                tudoPut.style.visibility = 'visible';
+                                trashPut.style.visibility = 'visible';
+                                createAlbum2.style.visibility = 'visible';
+                                photoDiv.querySelector('.selected2').style.backgroundColor = "#ffffff;";
+                                changeColor(1);
+                                const bee = document.querySelectorAll('#gallery div');
+                                bee.forEach(be => {
+                                    be.style.width = '93%';
+                                    be.style.gap = '5px';
+                                });
+                            }
+                            else{
+                                privatePut.style.visibility = 'hidden';    
+                                tudoPut.style.visibility = 'hidden';
+                                trashPut.style.visibility = 'hidden';
+                                createAlbum2.style.visibility = 'hidden';
+                                changeColor(0);
+                                const bee = document.querySelectorAll('#gallery div');
+                                bee.forEach(be => {
+                                    be.style.width = '100%';
+                                    be.style.gap = '10px';
+                                });
+                            }
+                        }
+                    }
+                    else{
+                        photoDiv.onclick = function(){
+                            goLink(`${IMG}`);
+                        }                        
+                        privatePut.style.visibility = 'hidden';    
+                        tudoPut.style.visibility = 'hidden';
+                        trashPut.style.visibility = 'hidden';
+                        createAlbum2.style.visibility = 'hidden';
+                    }
+
+
+
+
+                    
+                    
+                });
+
+                photoDiv.addEventListener('mouseout', () => {
+                    event.stopPropagation();
+                    tudo = JSON.parse(localStorage.getItem('tudo'));
+
+
+                    if (JSON.parse(localStorage.getItem('tudo')).length>0) {
+                        privatePut.style.visibility = 'visible';    
+                        tudoPut.style.visibility = 'visible';
+                        trashPut.style.visibility = 'visible';
+                        createAlbum2.style.visibility = 'visible';
+                        photoDiv.querySelector('.selected2').style.backgroundColor = "#ffffff;";
+                        changeColor(1);
+                        const bee = document.querySelectorAll('#gallery div');
+                            bee.forEach(be => {
+                                be.style.width = '93%';
+                                be.style.gap = '5px';
+                            });
+                    }
+                    else{
+                        privatePut.style.visibility = 'hidden';    
+                        tudoPut.style.visibility = 'hidden';
+                        trashPut.style.visibility = 'hidden';
+                        createAlbum2.style.visibility = 'hidden';
+                        changeColor(0);
+                        const bee = document.querySelectorAll('#gallery div');
+                        bee.forEach(be => {
+                            be.style.width = '100%';
+                            be.style.gap = '10px';
+                        });
+                    }
+
+                    if (tudo.indexOf(IMG) == -1){
+                        photoDiv.querySelector('.selected-b').style.backgroundColor = "transparent";
+                    }
+
+                    else{
+                        photoDiv.querySelector('.selected-b').style.backgroundColor = "#3d3d3d";
+                    }
+
+
+
+                    photoDiv.querySelector('.selected2').addEventListener('mouseover', () => {
+                        event.stopPropagation();
+
+                        photoDiv.querySelector('.selected-b').style.backgroundColor = "#9c9c9c";
+                        photoDiv.querySelector('.selected2').style.backgroundColor = "#ffffff";
+
+                    });
+
+                    photoDiv.querySelector('.selected-b').addEventListener('mouseover', () => {
+                        event.stopPropagation();
+
+                        photoDiv.querySelector('.selected-b').style.backgroundColor = "#9c9c9c";
+                        photoDiv.querySelector('.selected2').style.backgroundColor = "#ffffff";
+
+                    });
+
+                    photoDiv.querySelector('.selected2').addEventListener('mouseout', () => {
+                        event.stopPropagation();
+                        tudo = JSON.parse(localStorage.getItem('tudo'));
+
+                        if (tudo.indexOf(IMG) == -1){
+                            photoDiv.querySelector('.selected-b').style.backgroundColor = "transparent";
+                        }
+
+                        else{
+                            photoDiv.querySelector('.selected-b').style.backgroundColor = "#3d3d3d";
+                        }
+                    });
+
+
+                    photoDiv.querySelector('.selected2').onclick = function() {
+                        event.stopPropagation();
+                        tudo = JSON.parse(localStorage.getItem('tudo'));
+
+                        if (tudo.indexOf(IMG) == -1){
+                            tudo.push(IMG);
+                            localStorage.setItem('tudo', JSON.stringify(tudo));
+                        }
+                        else {
+                            photoDiv.querySelector('.selected-b').style.backgroundColor = "transparent";
+                            tudo = tudo.filter(num => num !== IMG);
+                            localStorage.setItem('tudo', JSON.stringify(tudo));
+
+                        }
+
+                        if (JSON.parse(localStorage.getItem('tudo')).length>0) {
+                            privatePut.style.visibility = 'visible';    
+                            tudoPut.style.visibility = 'visible';
+                            trashPut.style.visibility = 'visible';
+                            createAlbum2.style.visibility = 'visible';
+                            photoDiv.querySelector('.selected2').style.backgroundColor = "#ffffff;";
+                            changeColor(1);
+                            const bee = document.querySelectorAll('#gallery div');
+                            bee.forEach(be => {
+                                be.style.width = '93%';
+                                be.style.gap = '5px';
+                            });
+                        }
+                        else{
+                            privatePut.style.visibility = 'hidden';    
+                            tudoPut.style.visibility = 'hidden';
+                            trashPut.style.visibility = 'hidden';
+                            createAlbum2.style.visibility = 'hidden';
+                            changeColor(0);
+                            const bee = document.querySelectorAll('#gallery div');
+                            bee.forEach(be => {
+                                be.style.width = '100%';
+                                be.style.gap = '10px';
+                            });
+                        }
+                    }
+
+
+                    photoDiv.querySelector('.selected-b').onclick = function() {
+                        event.stopPropagation();
+                        tudo = JSON.parse(localStorage.getItem('tudo'));
+
+                        if (tudo.indexOf(IMG) == -1){
+                            tudo.push(IMG);
+                            localStorage.setItem('tudo', JSON.stringify(tudo));
+                        }
+                        else {
+                            photoDiv.querySelector('.selected-b').style.backgroundColor = "transparent";
+                            tudo = tudo.filter(num => num !== IMG);
+                            localStorage.setItem('tudo', JSON.stringify(tudo));
+
+                        }
+
+                        if (JSON.parse(localStorage.getItem('tudo')).length>0) {
+                            privatePut.style.visibility = 'visible';    
+                            tudoPut.style.visibility = 'visible';
+                            trashPut.style.visibility = 'visible';
+                            createAlbum2.style.visibility = 'visible';
+                            photoDiv.querySelector('.selected2').style.backgroundColor = "#ffffff;";
+                            changeColor(1);
+
+                            const bee = document.querySelectorAll('#gallery div');
+                            bee.forEach(be => {
+                                be.style.width = '93%';
+                                be.style.gap = '5px';
+                            });
+                            
+                        }
+                        else{
+                            privatePut.style.visibility = 'hidden';    
+                            tudoPut.style.visibility = 'hidden';
+                            trashPut.style.visibility = 'hidden';
+                            createAlbum2.style.visibility = 'hidden';
+                            changeColor(0);
+                            const bee = document.querySelectorAll('#gallery div');
+                            bee.forEach(be => {
+                                be.style.width = '100%';
+                                be.style.gap = '10px';
+                            });
+                        }
+                    }
+                    
+                    
+
+                    
+
+                });
+            });
+
+
+            //     div2.onclick = function() {
+            //         event.stopPropagation();
+            //         if (tudoSee==true){
+            //             if (checked==1){
+            //                 checked = 0;
+            //                 clickSee = false;
+
+
+            //                 div2.style.backgroundColor = '#ffffff';
+            //                 div1.style.backgroundColor = 'transparent';
+            //                 trashPut.style.visibility = 'visible';
+            //                 privatePut.style.visibility = 'visible';
+            //                 tudoPut.style.visibility = 'visible';
+            //                 createAlbum2.style.visibility = 'visible';
+            //                 totalClicks = totalClicks + 1;
+
+            //                 tudo = tudo.filter(num => num !== image);
+            //                 localStorage.setItem('tudo', JSON.stringify(tudo));
+            //             }
+
+            //             else{
+            //                 checked = 1;
+            //                 totalClicks = totalClicks - 1;
+                            
+            //                 div1.style.backgroundColor = '#3d3d3d';
+                            
+            //                 tudo.push(image);
+            //                 localStorage.setItem('tudo', JSON.stringify(tudo));
+
+            //                 if (totalClicks == 0){
+            //                     privatePut.style.visibility = 'hidden';
+            //                     tudoPut.style.visibility = 'hidden';
+            //                     trashPut.style.visibility = 'hidden';
+            //                     createAlbum2.style.visibility = 'hidden';
+            //                     clickSee = true;
+            //                 }
+            //             }
+            //         }
+
+            //         else{
+            //             if (checked==1){
+            //                 checked = 0;
+            //                 clickSee = false;
+            //                 changeColor(1);
+
+            //                 div2.style.backgroundColor = '#ffffff';
+            //                 div1.style.backgroundColor = '#3d3d3d';
+            //                 trashPut.style.visibility = 'visible';
+            //                 privatePut.style.visibility = 'visible';
+            //                 tudoPut.style.visibility = 'visible';
+            //                 createAlbum2.style.visibility = 'visible';
+            //                 totalClicks = totalClicks + 1;
+
+            //                 tudo.push(image);
+            //                 localStorage.setItem('tudo', JSON.stringify(tudo));
+            //             }
+
+            //             else{
+            //                 totalClicks = totalClicks - 1;
+                            
+            //                 div1.style.backgroundColor = 'transparent';
+
+            //                 tudo = tudo.filter(num => num !== image);
+            //                 localStorage.setItem('tudo', JSON.stringify(tudo));
+
+            //                 if (totalClicks == 0){
+            //                     privatePut.style.visibility = 'hidden';
+            //                     tudoPut.style.visibility = 'hidden';
+            //                     trashPut.style.visibility = 'hidden';
+            //                     createAlbum2.style.visibility = 'hidden';
+            //                     checked = 1;
+            //                     clickSee = true;
+            //                     changeColor(0);
+            //                 }
+            //             }
+            //         }
+            //     };
+
+            //     div2.addEventListener('mouseover', () => {
+            //         event.stopPropagation();
+            //         if (tudoSee==true){
+            //             if (checked==1){
+            //                 div1.style.backgroundColor = '#3d3d3d';
+            //             }
+            //             else{
+            //                 div1.style.backgroundColor = '#9c9c9c';
+            //                 div2.style.backgroundColor = '#ffffff';                        
+            //             }
+            //         }
+            //         else{
+            //             if (checked==1){
+            //                 div1.style.backgroundColor = '#9c9c9c';
+            //                 div2.style.backgroundColor = '#ffffff';
+            //             }
+            //             else{
+            //                 div1.style.backgroundColor = '#9c9c9c';
+            //                 div2.style.backgroundColor = '#ffffff';
+            //             }
+            //         }
+            //     });
+
+            //     div2.addEventListener('mouseout', () => {
+            //         if (tudoSee==true){
+            //             if (checked==1){
+            //                 div1.style.backgroundColor = '#3d3d3d';
+            //             }
+            //             else{
+            //                 div1.style.backgroundColor = '#3d3d3d';
+            //                 div2.style.backgroundColor = '#ffffff';
+            //             }
+            //         }
+            //         else{
+            //             if (checked==1){
+            //                 div2.style.backgroundColor = '#ffffff';
+            //             }
+            //             else{
+            //             }
+            //         }
+            //     });
+
+
+      
+            //     photoDiv.onclick = function() {
+            //         if (tudoSee == true){
+            //             if (checked==1){
+            //                 if (clickSee == false){
+            //                     div1.style.backgroundColor = "transparent"; 
+            //                     div2.style.backgroundColor = "#ffffff"; 
+            //                     checked = 1
+            //                     tudoSee = 0
+            //                     totalClicks = totalClicks + 1;
+
+            //                     tudo = tudo.filter(num => num !== image);
+            //                     localStorage.setItem('tudo', JSON.stringify(tudo));
+
+            //                 }
+            //                 else if (clickSee == true){
+            //                     console.log("b");
+            //                     goLink(`${link}`);
+            //                 }
+            //             }
+
+            //             else{
+            //                 checked = 1;
+            //                 totalClicks = totalClicks - 1;
+
+            //                 div1.style.backgroundColor = 'transparent';
+
+            //                 tudo.push(image);
+            //                 localStorage.setItem('tudo', JSON.stringify(tudo));
+
+            //                 if (totalClicks == 0){
+            //                     console.log(totalClicks)
+            //                     privatePut.style.visibility = 'hidden';
+            //                     tudoPut.style.visibility = 'hidden';
+            //                     trashPut.style.visibility = 'hidden';
+            //                     createAlbum2.style.visibility = 'hidden';
+            //                     clickSee = true;
+            //                 }
+            //             }
+            //         }
+
+            //         else{
+            //             if (checked==1){
+            //                 if (clickSee == false){
+            //                     checked = 0
+            //                     totalClicks = totalClicks + 1;
+
+            //                     div1.style.backgroundColor = "#3d3d3d"; 
+            //                     div2.style.backgroundColor = "#ffffff"; 
+
+            //                     tudo.push(image);
+            //                     localStorage.setItem('tudo', JSON.stringify(tudo));
+            //                 }
+            //                 else {
+            //                     console.log("b");
+            //                     goLink(`${link}`);
+            //                 }
+            //             }
+            //             else{
+            //                 checked = 1;
+            //                 totalClicks = totalClicks - 1;
+
+            //                 div1.style.backgroundColor = 'transparent';
+
+            //                 tudo = tudo.filter(num => num !== image);
+            //                 localStorage.setItem('tudo', JSON.stringify(tudo));
+
+            //                 if (totalClicks == 0){
+            //                     console.log(totalClicks)
+            //                     privatePut.style.visibility = 'hidden';
+            //                     tudoPut.style.visibility = 'hidden';
+            //                     trashPut.style.visibility = 'hidden';
+            //                     createAlbum2.style.visibility = 'hidden';
+            //                     clickSee = true;
+            //                 }
+            //             }
+            //         }
+            //     };
+
+            //     photoDiv.addEventListener('mouseover', () => {
+            //         photoDiv.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.6)';
+            //         if (tudoSee==true){
+            //             if (checked==1){
+            //                 div2.style.backgroundColor = '#ffffff';
+            //                 div1.style.backgroundColor = '#9c9c9c';
+            //             }
+            //             else{
+            //                 div2.style.backgroundColor = '#ffffff';
+            //                 div1.style.backgroundColor = 'transparent';            
+            //             }
+            //         }
+
+            //         else{
+            //             if (checked==1){
+            //                 div2.style.backgroundColor = '#ffffff';
+            //             }
+            //             else{
+            //                 div2.style.backgroundColor = '#ffffff';
+            //             }
+            //         }
+            //     });
+
+            //     photoDiv.addEventListener('mouseout', () => {
+            //         photoDiv.style.boxShadow = '0 0 0';
+            //         if (tudoSee==true){
+            //             if (checked==1){
+            //                 div2.style.backgroundColor = '#ffffff';
+            //                 div1.style.backgroundColor = 'transparent';
+            //             }
+            //             else{
+            //                 div2.style.backgroundColor = '#ffffff';
+            //                 div1.style.backgroundColor = '#3d3d3d';
+            //             }         
+            //         }
+
+            //         else{
+            //             if (checked==1){
+            //                 div2.style.backgroundColor = 'transparent';
+            //             }
+            //             else{
+            //                 div2.style.backgroundColor = '#ffffff';
+            //             }
+            //         }
+            //     });
+            // });  
+        }
+            
+        function goLink(urlB) {
+            const newUrl = urlB.split('galeria/')[1];
+            window.location.href = `images.html?image=${newUrl}`;
+        }
+
+    </script>
+
+    <script type="module" src="scripts/main.js"></script>
+      
+</body>
+</html>

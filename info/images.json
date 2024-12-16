@@ -1,0 +1,60 @@
+[
+    {
+        "1pre": [
+            {
+                "Galeria": 36,
+                "Restaurante": 26,
+                "Livros": 44
+            }
+        ],
+
+        "facebook": [
+            {
+                "Restaurantes": 6
+            }
+        ],
+
+        "instagram": [
+            {
+                "Amigos": 44
+            }
+        ],
+
+        "twitter": [
+            {
+                "Loja": 21
+            }
+        ],
+
+        "whatsapp": [
+            {
+                "Muralha": 44
+            }
+        ],
+
+        "googlephotos": [
+            {
+                "Vernáculo": 44
+            }
+        ],
+
+        "pinterest": [
+            {
+                "Nada": 44
+            }
+        ],
+
+        "phone": [
+            {
+                "Itália": 22
+            }
+        ],
+
+        "computer": [
+            {
+                "Tudo": 25
+
+            }
+        ]
+    }
+]

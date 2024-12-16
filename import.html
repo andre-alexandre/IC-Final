@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria de Fotos</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
+</head>
+
+<body>
+    <header id="topbar">
+        
+        <div id="search-container">
+            <input id="search-container-input" type="text" placeholder="Pesquisar...">
+            <img src="https://img.icons8.com/ios-filled/50/000000/search--v1.png" alt="Lupa">
+        </div>
+
+        <div id="space">
+            <a href="import.html" id="space1"><img src="images/sidebar/import.png"></a>
+            <a onclick="loadSettings(5);" href="settings.html" id="space2"><img src="images/sidebar/help.png"></a>
+        </div>
+    </header>
+
+
+
+    <aside id="sidebar">
+
+        <button onclick="window.location.href='settings.html';" onmouseover="preloadPage('settings.html')">
+            <img id="account" src="images/sidebar/account.jpg" title="Conta">
+        </button>
+
+        <div id="hr-top"></div>
+
+        <button onclick="window.location.href='index.html';" onmouseover="preloadPage('index.html')">
+            <img id="home-a" src="images/sidebar/images.png" title="Fotos">
+        </button>
+
+        <button onclick="window.location.href='archive.html';" onmouseover="preloadPage('archive.html')">
+            <img id="archive" src="images/sidebar/albuns.png" title="Álbuns">
+        </button>
+
+        <button onclick="window.location.href='private.html';" onmouseover="preloadPage('private.html')">
+            <img id="private" src="images/sidebar/private.png" title="Privado">
+        </button>
+
+        <button onclick="window.location.href='trash.html';" onmouseover="preloadPage('chat.html')">
+            <img id="chat" src="images/sidebar/trash.png" title="Partilhados">
+        </button>
+
+        <div id="hr-bottom"></div>
+
+        <button id="last" onclick="window.location.href='settings.html';" onmouseover="preloadPage('settings.html')">
+            <img id="settings-b" src="images/sidebar/settings.png" title="Definições">
+        </button>
+    </aside>
+
+
+    
+    <main id="content">
+        <div id="import">
+            <div class="imports">
+                <img src="images/import/facebook.png" alt="Facebook">
+                <p>Facebook</p>
+            </div>
+        
+            <div class="imports">
+                <img src="images/import/instagram.png" alt="Instagram">
+                <p>Instagram</p>
+            </div>
+        
+            <div class="imports">
+                <img src="images/import/twitter.png" alt="Twitter">
+                <p>Twitter</p>
+            </div>
+        
+            <div class="imports">
+                <img src="images/import/whatsapp.png" alt="WhatsApp">
+                <p>WhatsApp</p>
+            </div>
+        
+            <div class="imports">
+                <img src="images/import/pinterest.png" alt="Pinterest">
+                <p>Pinterest</p>
+            </div>
+        
+            <div class="imports">
+                <img src="images/import/googlephotos.png" alt="Google Photos">
+                <p>Google Photos</p>
+            </div>
+        
+            <div class="importsN">
+                <img src="images/import/phone.png" alt="Phone">
+                <p>Phone</p>
+            </div>
+        
+            <div class="importsN">
+                <img src="images/import/computer.png" alt="Computer">
+                <p>Computer</p>
+            </div>
+        </div>
+        
+    </main>
+
+    <script>
+        document.getElementById("search-container-input").addEventListener("input", function () {
+            const searchTerm = this.value.toLowerCase();
+            const paragraphs = document.querySelectorAll("p");
+
+
+            // Remove previous highlights
+            paragraphs.forEach(paragraph => {
+                paragraph.innerHTML = paragraph.textContent;
+            });
+
+            // Highlight new matches
+            if (searchTerm) {
+                paragraphs.forEach(paragraph => {
+                    const regex = new RegExp(`(${searchTerm})`, "gi");
+                    paragraph.innerHTML = paragraph.textContent.replace(regex, `<mark>$1</mark>`);
+                });
+            }
+
+            if (searchTerm) {
+                const firstMatch = document.querySelector("mark");
+                if (firstMatch) {
+                    firstMatch.scrollIntoView({ behavior: "smooth", block: "center" });
+                }
+            }
+        });
+    </script>
+
+    <script type="module" src="scripts/main.js"></script>
+</body>
+</html>

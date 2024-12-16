@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            transition: background-color 0.3s;
+        }
+        .login-container {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            width: 300px;
+        }
+        .login-header {
+            margin-top: 0em;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+        }
+        .login-button {
+            display: block;
+            width: 100%;
+            padding: 0.5rem;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+        .login-button:hover{
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        input{
+            border: #333 0.1em solid;
+            border-radius: 1em;
+        }
+
+        a{
+            text-decoration: underline;
+            color: #000;
+            font-size: small;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1 class="login-header">Welcome</h1>
+        <input id="user" type="text" placeholder="Utilizador" style="width: 100%; margin-bottom: 1rem; padding: 0.5rem;">
+        <input id="pass" type="password" placeholder="Palavra-passe" style="width: 100%; padding: 0.5rem; margin-bottom: 0.5em;">
+        <a id="forgot">Esqueceu-se da sua Palavra-passe?</a>
+        <button class="login-button" id="loginButton">Log In</button>
+    </div>
+
+    <script>
+        // Get the value of the 'import' parameter from the URL
+        const params = new URLSearchParams(window.location.search);
+        const importName = params.get('import');
+
+        const forgot = document.getElementById("forgot");
+
+        const body = document.body;
+        const loginContainer = document.querySelector('.login-container');
+        const loginHeader = document.querySelector('.login-header');
+        const loginButton = document.querySelector('#loginButton');
+
+        if (importName) {
+            const platform = importName.split('.')[0].toLowerCase();
+
+            switch (platform) {
+                case 'facebook':
+                    document.title = 'Facebook';
+                    body.style.backgroundColor = '#3b5998';
+                    loginContainer.style.backgroundColor = '#74b7ff';
+                    loginHeader.textContent = 'Welcome to Facebook';
+                    loginButton.style.backgroundColor = '#3b5998';
+                    break;
+                case 'instagram':
+                    document.title = 'Instagram';
+                    body.style.backgroundColor = '#E1306C';
+                    loginContainer.style.backgroundColor = '#9950f8';
+                    loginHeader.textContent = 'Welcome to Instagram';
+                    loginButton.style.backgroundColor = '#E1306C';
+                    break;
+                case 'twitter':
+                    document.title = 'Twitter';
+                    body.style.backgroundColor = '#313131';
+                    loginContainer.style.backgroundColor = '#1DA1F2';
+                    loginHeader.textContent = 'Welcome to Twitter';
+                    loginButton.style.backgroundColor = '#313131';
+                    break;
+                case 'whatsapp':
+                    document.title = 'WhatsApp';
+                    body.style.backgroundColor = '#25D366';
+                    loginContainer.style.backgroundColor = '#aaff9b';
+                    loginHeader.textContent = 'Welcome to WhatsApp';
+                    loginButton.style.backgroundColor = '#25D366';
+                    break;
+                case 'googlephotos':
+                    document.title = 'Google Photos';
+                    body.style.backgroundColor = '#ffe869';
+                    loginContainer.style.backgroundColor = '#2b8eff';
+                    loginContainer.style.border = "thick solid #ff4141";
+                    loginHeader.textContent = 'Welcome to Google Photos';
+                    loginButton.style.backgroundColor = '#1f9334';
+                    break;
+                case 'pinterest':
+                    document.title = 'Pinterest';
+                    body.style.backgroundColor = '#E60023';
+                    loginContainer.style.backgroundColor = '#ff8484';
+                    loginHeader.textContent = 'Welcome to Pinterest';
+                    loginButton.style.backgroundColor = '#E60023';
+                    break;
+                default:
+                    document.title = 'Unknown Platform';
+                    body.style.backgroundColor = '#333';
+                    loginHeader.textContent = 'Welcome';
+                    break;
+            }
+        } else {
+            document.title = 'No Platform Specified';
+            body.style.backgroundColor = '#333';
+            loginHeader.textContent = 'Platform not recognized';
+        }
+
+        // Add event listener to the login button to close the current window and navigate in the opener
+        loginButton.addEventListener('click', () => {
+            const user = document.getElementById("user");
+            const pass = document.getElementById("pass");
+            console.log(user, pass);
+
+            if (window.opener) {
+                if (pass.value != "" && user.value != "") {
+                    const currentLink= window.location.href
+                    const currentApp = currentLink.split('=').pop().split('.').shift();
+                    console.log(currentApp);
+                    window.opener.location.href =`import-choose.html?app=${currentApp}`;
+                    window.close();
+                }
+                else {
+                    alert('Por favor, preencha a opção "Utilizador" e respetiva "Palavra-passe"!');
+                }
+            }
+        });
+
+        forgot.addEventListener('click', () => {
+            alert('Tente fazer Login para ter a certeza de que não se lembra da sua Palavra-passe!');
+        });
+    </script>
+</body>
+</html>

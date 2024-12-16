@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria de Fotos</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
+</head>
+
+<body>
+    <header id="topbar">
+        
+        <div id="search-container">
+            <input id="search-container-input" type="text" placeholder="Pesquisar...">
+            <img src="https://img.icons8.com/ios-filled/50/000000/search--v1.png" alt="Lupa">
+        </div>
+
+        <div id="space">
+            <a href="import.html" id="space1"><img src="images/sidebar/import.png"></a>
+            <a onclick="loadSettings(5);" href="settings.html" id="space2"><img src="images/sidebar/help.png"></a>
+        </div>
+    </header>
+
+
+
+    <aside id="sidebar">
+        <div id="voltar" onclick="goToPreviousPage();">Voltar</div>
+
+        <button onclick="window.location.href='settings.html';">
+            <img id="account" src="images/sidebar/account.jpg" title="Conta">
+        </button>
+
+        <div id="hr-top"></div>
+
+        <button onclick="window.location.href='index.html';">
+            <img id="home" src="images/sidebar/images.png" title="Fotos">
+        </button>
+
+        <button onclick="window.location.href='archive.html';">
+            <img id="archive-a" src="images/sidebar/albuns.png" title="Álbuns">
+        </button>
+
+        <button onclick="window.location.href='chat.html';">
+            <img id="chat" src="images/sidebar/chat.png" title="Partilhados">
+        </button>
+
+        <button onclick="window.location.href='private.html';">
+            <img id="private" src="images/sidebar/private.png" title="Privado">
+        </button>
+
+        <div id="hr-bottom"></div>
+
+        <button id="last" onclick="window.location.href='settings.html';">
+            <img id="settings-b" src="images/sidebar/settings.png" title="Definições">
+        </button>
+    </aside>
+
+    <div id="popUp77">
+        <div id="whiteBack">
+            <h2 style="text-align: center; margin-top: 0.2em; margin-bottom: 0.2em;">Tem a certeza que deseja criar um álbum?</h2>
+        </div>
+        
+        <div id="whiteBack1">
+            <div style="text-align: center; margin-top: 2.1em;">
+                <span id="escolher" onclick="popUp77();">Não</span>
+                <span id="escolher" onclick="addAlbuns();popU77();">Sim</span>
+            </div>
+        </div>
+    </div>
+
+    
+    <main id="content">
+            <h1 style="text-align: center; margin-top: 2em;">Criação de um Álbum </h1>
+
+            <div id="aply" style="text-align: center;">
+                <p style="display: block; font-weight: 700; font-size: x-large; text-align: center; margin-top: 2em;">Nome</p>
+                <input style=" padding: 5px; margin-top: 0.2em;" type="text" name="nome" id="nome" placeholder="Digite o nome do álbum">
+            </div>
+            
+
+            <div style="text-align: center; margin-top: 8em;">
+                <span id="escolher" onclick="popUp77(1);">Acabar</span>
+            </div>
+    </main>
+
+    <script>
+        var check77 = false
+
+
+        function popUp77(num){
+            if (num == 1 ){
+                if (nome == null || nome.length == 0 || nome == "") {
+                    alert("Nenhuma imagem foi escolhida.");
+                }
+
+                else{
+                    document.getElementById("content").style.filter = "blur(5px)";
+                    document.getElementById("content").style.pointerEvents = "none";
+                    document.getElementById("popUp77").style.visibility="visible";
+                    check = true;
+                }
+            }
+
+            else{
+                if (check==true){
+                    document.getElementById("content").style.filter = "blur(0px)";
+                    document.getElementById("content").style.pointerEvents = "visible";
+                    document.getElementById("popUp77").style.visibility="hidden";
+                    check = false;
+                }
+                else{
+                }
+
+            }
+        }
+
+        if (localStorage.getItem("newAlbuns") == null) {
+            var data ={}
+            localStorage.setItem('newAlbuns', JSON.stringify(data));
+        }
+        function addAlbuns() {
+            const nome = document.getElementById("nome").value;
+
+            if (nome == null || nome.length == 0 || nome == "") {
+                alert("Nenhum Nome foi atribuído ao Álbum.");
+            }
+            else{
+                if (localStorage.getItem("createA") == null || localStorage.getItem("createA") != "" ) {
+
+
+                    const newAlbum = JSON.parse(localStorage.getItem("createA"));
+                    const currentAlbum = JSON.parse(localStorage.getItem("newAlbuns"));
+
+
+                    currentAlbum[nome] = newAlbum;
+
+                    localStorage.setItem("newAlbuns", JSON.stringify(currentAlbum));
+
+                    localStorage.setItem('createA', "");
+                    window.location.href = "archive.html";
+
+                }
+
+                else{
+
+
+                    const newAlbum = JSON.parse(localStorage.getItem("newList"));
+                    const currentAlbum = JSON.parse(localStorage.getItem("newAlbuns"));
+
+
+                    currentAlbum[nome] = newAlbum;
+
+                    const im = JSON.parse(localStorage.getItem("imageFiles"));
+                    const Nim = [];
+                    im.forEach(el => {
+                        Nim.push(el);
+                    });
+
+                    newAlbum.forEach(ele => {
+                        Nim.push(ele);
+                    });
+
+
+
+                    localStorage.setItem("imageFiles", JSON.stringify(Nim));
+
+
+                    localStorage.setItem("newAlbuns", JSON.stringify(currentAlbum));
+                    window.location.href = "archive.html";
+                }
+            }
+        };
+    </script>
+
+    <script src="scripts/main.js"></script>
+</body>
+</html>

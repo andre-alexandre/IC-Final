@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria de Fotos</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
+</head>
+
+<body>
+    <header id="topbar">
+        
+        <div id="search-container">
+            <input id="search-container-input" type="text" placeholder="Pesquisar...">
+            <img src="https://img.icons8.com/ios-filled/50/000000/search--v1.png" alt="Lupa">
+        </div>
+
+        <div id="space">
+            <a href="import.html" id="space1"><img src="images/sidebar/import.png"></a>
+            <a onclick="loadSettings(5);" href="settings.html" id="space2"><img src="images/sidebar/help.png"></a>
+        </div>
+    </header>
+
+
+
+    <aside id="sidebar">
+
+        <button onclick="popUpPlan(1, 1, 'settings.html')" onmouseover="preloadPage('settings.html')">
+            <img id="account" src="images/sidebar/account.jpg" title="Conta">
+        </button>
+
+        <div id="hr-top"></div>
+
+        <button onclick="popUpPlan(1, 1, 'index.html')" onmouseover="preloadPage('index.html')">
+            <img id="home" src="images/sidebar/images.png" title="Fotos">
+        </button>
+
+        <button onclick="window.location.href='archive.html';" onmouseover="preloadPage('archive.html')">
+            <img id="archive" src="images/sidebar/albuns.png" title="Álbuns">
+        </button>
+
+        <button onclick="window.location.href='private.html';" onmouseover="preloadPage('private.html')">
+            <img id="private" src="images/sidebar/private.png" title="Privado">
+        </button>
+
+        <button onclick="window.location.href='trash.html';" onmouseover="preloadPage('chat.html')">
+            <img id="chat" src="images/sidebar/trash.png" title="Partilhados">
+        </button>
+
+        <div id="hr-bottom"></div>
+
+        <button id="last" onclick="window.location.href='settings.html';" onmouseover="preloadPage('settings.html')">
+            <img id="settings-b-a" src="images/sidebar/settings.png" title="Definições">
+        </button>
+    </aside>
+
+    <div id="apopUp">
+        <div id="whiteBack">
+            <h2 style="text-align: center; margin-top: 0.2em; margin-bottom: 0.2em;">Deseja aplicar as opções definidas?</h2>
+        </div>
+        
+        <div id="whiteBack1">
+            <div style="text-align: center; margin-top: 2.1em;">
+                <span id="escolher" onclick="popUp1();">Não</span>
+                <span id="escolher" onclick="changes();popUp1();">Sim</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="apopUpPlan">
+        <div id="whiteBack">
+            <h2 style="text-align: center; margin-top: 0.2em; margin-bottom: 0.2em;">Não guardou a alteração de subscrição</h2>
+            <h2 style="text-align: center; margin-top: 0.2em; margin-bottom: 0.2em;">Deseja definir eta como a sua nova subscrição?</h2>
+        </div>
+        
+        <div id="whiteBack1">
+            <div style="text-align: center; margin-top: 2.1em;">
+                <span id="escolher" onclick="popUpPlan(2, 0);">Não</span>
+                <span id="escolher" onclick="popUpPlan(3, 0);">Sim</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="apopUpPlan1">
+        <div id="whiteBack">
+            <h2 style="text-align: center; margin-top: 0.2em; margin-bottom: 0.2em;">Deseja definir esta como a sua nova subscrição?</h2>
+        </div>
+        
+        <div id="whiteBack1">
+            <div style="text-align: center; margin-top: 2.1em;">
+                <span id="escolher" onclick="popUpPlan(2, 0);">Não</span>
+                <span id="escolher" onclick="popUpPlan(3, 0);">Sim</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="apopUpPlan2">
+        <div id="whiteBack">
+            <h2 style="text-align: center; margin-top: 0.2em; margin-bottom: 0.2em;">Não selecionou nenhuma nova subscrição</h2>
+        </div>
+        
+        <div id="whiteBack1">
+            <div style="text-align: center; margin-top: 2.1em;">
+                <span id="escolher" onclick="popUpPlan(2, 0);">Ok</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="apopUp3">
+        <div id="whiteBack">
+            <h2 style="text-align: center; margin-top: 0.2em; margin-bottom: 0.2em;">Esta opção ainda não está disponível</h2>
+        </div>
+        
+        <div id="whiteBack1">
+            <div style="text-align: center; margin-top: 2.1em;">
+                <span id="escolher" onclick="popUp3();">Ok</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="apopUp2">
+        <div id="whiteBack">
+            <h2 style="text-align: center; margin-top: 0.2em; margin-bottom: 0.2em;">Deseja aplicar as opções definidas?</h2>
+        </div>
+        
+        <div id="whiteBack1">
+            <div style="text-align: center; margin-top: 2.1em;">
+                <span id="escolher" onclick="popUp1();">Não</span>
+                <span id="escolher" onclick="changes();popUp1();">Sim</span>
+            </div>
+        </div>
+    </div>
+    
+    <main id="content">
+        <div id="gallery" style="display: none;"></div>
+        <div id="settings">
+            <div id="options">
+                <button id="b1" onclick="popUpPlan(1, 1);">Design</button>
+                <button id="b2" onclick="popUpPlan(1, 2);">Conta</button>
+                <button id="b4" onclick="popUpPlan(1, 4);">Subscrições</button>
+                <button id="b3" onclick="popUpPlan(1, 3);">Sobre</button>
+                <button id="b5" onclick="popUpPlan(1, 5); clickSee();">Ajuda</button>
+            </div>
+
+            <div id="text-1">
+                <h2>Páginas</h2>
+                <h3>Cores</h3>
+
+                <div>
+                    <input class="colors" type="color" id="priPicker" value="#e0e0e0">
+                    <p>Principal</p>
+                </div>
+                <div>
+                    <input class="colors" type="color" id="secPicker" value="#ffffff">
+                    <p>Secundária</p>
+                </div>
+                <div>
+                    <input class="colors" type="color" id="detPicker" value="#9c9c9c">
+                    <p>Detalhes</p>
+                </div>
+
+
+                <hr class="lines"></hr>
+                
+                <h2>Botões</h2>
+                <h3>Cores</h3>
+                <div>
+                    <input class="colors" type="color" id="borPriPicker" value="#e0e0e0">
+                    <p>Principal</p>
+                </div>
+                <div>
+                    <input class="colors" type="color" id="borSecPicker" value="#9c9c9c">
+                    <p>Secundária</p>
+                </div>
+
+                <h3 style="display: block; margin-top: 1em;">Bordas</h3>
+                <select id="borders">
+                    <option value="1">Muito Arredondadas</option>
+                    <option value="2" selected>Pouco Arredondadas</option>
+                    <option value="3">Nada Arredondadas</option> 
+                </select>
+
+                
+                <hr class="lines"></hr>
+                
+                <h2>Texto</h2>
+                <h3>Cores</h3>
+                <div>
+                    <input class="colors" type="color" id="textPicker" value="#000000">
+                </div>
+
+                <div id="end" style="margin-top: 3em; display: block;">
+                    <button class="colorB" onclick="resetBodyToDefault()">Restaurar</button>
+                    <button class="colorB" onclick="popUp1(1);">Aplicar</button>
+                </div>
+            </div>
+
+            <div id="text-2">
+                <img src="images/sidebar/account.jpg">
+                <h2>João Vigueirinhas</h2>  
+                <p style="margin-top: -0.3em;">joãoferreiravigueirinhas@sapato.pt</p>
+
+                <div style="margin-top: 1em;">
+                    <button class="colorB" style="margin-right: 1em;" onclick="popUp3(1);">Alterar Senha</button>
+                    <button class="colorB" style="margin-left: 1em;" onclick="popUp3(1);">Recuperar Senha</button>
+                    <div style="margin-top: -0.5em;">
+                        <button class="colorB" onclick="popUp3(1);">Excluir Conta</button>
+                    </div>
+                </div>
+<!--            <input type="email" id="recoveryEmail" placeholder="Email para recuperar">
+                <input type="password" id="currentPassword" placeholder="Senha Atual">
+                <input type="password" id="newPassword" placeholder="Nova Senha">
+                <input type="password" id="confirmPassword" placeholder="Confirmar Senha"> -->
+
+            </div>
+
+            <div id="text-3">
+                <div style="margin-right: 50%; margin-left: 2%;">
+                    <h2>Memento Gallery</h2>
+
+                    <h3>Seja bem vindo </h3>
+                    <p>Explore a nossa galeria interativa, onde imagens e histórias se encontram.</p>
+                    <p>Aqui, cada clique revela mais do que uma fotografia. É uma conexão direta com momentos, lugares e ideias que despertam emoções e curiosidade.</p>
+                    
+                    <h3>Diversidade visual</h3>  
+                    <p>Um mundo de imagens cuidadosamente selecionadas para inspirar.</p>
+    
+                    <h3>Interatividade</h3>
+                    <p>Clique e descubra detalhes exclusivos de cada conteúdo.</p>
+    
+                    <h3>Conexões emocionais</h3>
+                    <p>Imagens que contam histórias e criam memórias.</p>
+    
+                    <p>Esta galeria é mais do que uma exposição; é um convite para explorar, admirar e se surpreender. Navegue, descubra e deixe-se levar pela beleza de cada detalhe!</p>
+                </div>
+                
+                <div style="border-radius: 1em; position: fixed; top: 20%; left: 62%; height: 66%; background-color: #9c9c9c; width: 4px;"></div>
+    
+                <div style="position: fixed; top: 40%; left: 67%;">
+                    <iframe style="border-radius: 1em;" width="100%" height="200px" src="https://www.youtube.com/embed/iSg_0tsqCkM?si=spKfGpjCCj8aH8LE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    <p style="font-weight: 700;">Eis um Vídeo a apresentar o nosso Programa!</p>
+                </div>
+            </div>
+
+            <div id="text-4">
+                <h1>Escolha a Subscrição Ideal para si!</h1>
+
+                <div class="usage-bar">
+                    <div class="used"></div>
+                </div>
+                <p class="usage-text">60% do espaço já utilizado.</p>
+
+                <div class="plans">
+                    <div class="plan" id="plan-1">
+                        <h3>Plano Básico</h3>
+                        <p id="sub">Ideal para quem apenas tira fotografias ocasionalmente.</p>
+                        <ul>
+                            <li>50 GB de armazenamento</li>
+                            <li>Backup automático</li>
+                            <li>Acesso em múltiplos dispositivos</li>
+                        </ul>
+                        <p class="price">Grátis</p>
+                    </div>
+        
+                    <div class="plan" id="plan-2">
+                        <h3>Plano Avançado</h3>
+                        <p id="sub">Ideal para quem usa grandes volumes de dados.</p>
+                        <ul>
+                            <li>200 GB de armazenamento</li>
+                            <li>Backup automático e recuperação de dados</li>
+                            <li>Sincronização em tempo real</li>
+                        </ul>
+                        <p class="price">5€/mês</p>
+                    </div>
+        
+                    <div class="plan" id="plan-3">
+                        <h3>Plano Premium</h3>
+                        <p id="sub">Ideal para quem faz uso de um enorme número de fotografias.</p>
+                        <ul>
+                            <li>1 TB de armazenamento</li>
+                            <li>Suporte prioritário 24/7</li>
+                            <li>Ferramentas avançadas de colaboração</li>
+                        </ul>
+                        <p class="price">15€/mês</p>
+                    </div>
+                </div>
+
+                <button class="colorB" id="verify" onclick="popUpPlan(1, 0);">Aplicar</button>
+
+            </div>
+
+            <div id="text-5">
+                <div style="margin-right: 50%; margin-left: 2%;">
+                    <h2>Algumas Dúvidas mais frequentes</h2>
+                    <h3>O que é esta aplicação de galeria?</h3>
+                    <p>É um espaço onde compartilho minhas fotos exclusivas, organizadas em coleções temáticas.</p>
+
+                    <h3>Como faço para baixar a aplicação?</h3>
+                    <p>A aplicação está disponível na App Store e na Google Play. Basta procurar pelo nome e instalar.</p>
+
+                    <h3>Preciso criar uma conta para usar a aplicação?</h3>
+                    <p>Não é obrigatório, mas ao criar uma conta você pode salvar fotos favoritas e receber atualizações.</p>
+
+                    <h3>As imagens são originais?</h3>
+                    <p>Sim, todas as fotos na galeria foram tiradas e editadas por mim.</p>
+
+                    <h3>Posso baixar as fotos para uso pessoal?</h3>
+                    <p>Algumas fotos estão disponíveis para download como papéis de parede. Outras estão à venda para licenciamento.</p>
+
+                    <h3>Haverá atualizações frequentes na galeria?</h3>
+                    <p>Sim! Adiciono novas fotos e coleções regularmente.</p>
+
+                    <h3>Posso sugerir temas ou ideias para as fotos?</h3>
+                    <p>Adoro ouvir sugestões! Envie suas ideias pela seção de contato na aplicação.</p>
+
+                    <h3>As fotos podem ser compartilhadas em redes sociais?</h3>
+                    <p>Sim, há uma opção de compartilhamento direto para que você possa mostrar suas favoritas.</p>
+
+                    <h3>Há algum custo para usar a aplicação?</h3>
+                    <p>A aplicação é gratuita para explorar, mas algumas fotos e funcionalidades premium podem ser adquiridas.</p>
+
+                    <h3>Posso encomendar fotos personalizadas?</h3>
+                    <p>Sim! Há uma seção na aplicação para pedidos de fotografias exclusivas ou colaborações.</p>
+            </div>
+
+            <div style="border-radius: 1em; position: fixed; top: 20%; left: 62%; height: 66%; background-color: #9c9c9c; width: 4px;"></div>
+
+            <div style="position: fixed; top: 40%; left: 69%;">
+                <iframe style="border-radius: 1em;" width="100%" src="https://www.youtube.com/embed/7Ew5Oej19tU?si=2qpBAx5Y3o5iEkxQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                <p style="font-weight: 700;">Eis um Tutorial do nosso Programa!</p>
+            </div>
+
+        </div>
+    </main>
+
+
+    <script>
+        const b1 = document.getElementById('b1');
+        const b2 = document.getElementById('b2');
+        const b3 = document.getElementById('b3');
+        const b4 = document.getElementById('b4');
+        const b5 = document.getElementById('b5');
+
+        if (b1.style.backgroundColor != "rgb(255, 255, 255)" && b1.style.backgroundColor != "rgb(224, 224, 224" && b1.style.backgroundColor != ""){
+            console.log(b1.style.backgroundColor);
+            b1.addEventListener('mouseover', () => {
+                event.stopPropagation();
+
+                var seeIF = false
+                
+                if (localStorage.getItem('secondaryColor') != null){
+                    if (b1.style.backgroundColor == localStorage.getItem('secondaryColor')){
+                        seeIF = true;
+                    }
+                    b1.style.backgroundColor = localStorage.getItem('secondaryColor');
+                }
+                else{
+                    b1.style.backgroundColor = '#ffffff';
+                }
+            });
+
+            b1.addEventListener('mouseout', () => {
+                event.stopPropagation();
+                
+                if (localStorage.getItem('primaryColor') != null){
+                    if (seeIF == false){
+                        b1.style.backgroundColor = localStorage.getItem('primaryColor');
+                    }
+                }
+                else{
+                    b1.style.backgroundColor = '#e0e0e0';
+                }
+            });
+
+            b2.addEventListener('mouseover', () => {
+                event.stopPropagation();
+                
+                var seeIF = false
+                
+                if (localStorage.getItem('secondaryColor') != null){
+                    if (b2.style.backgroundColor == localStorage.getItem('secondaryColor')){
+                        seeIF = true;
+                    }
+                    b2.style.backgroundColor = localStorage.getItem('secondaryColor');
+                }
+                else{
+                    b2.style.backgroundColor = '#ffffff';
+                }
+            });
+
+            b2.addEventListener('mouseout', () => {
+                event.stopPropagation();
+                
+                if (localStorage.getItem('primaryColor') != null){
+                    if (seeIF == false){
+                        b2.style.backgroundColor = localStorage.getItem('primaryColor');
+                        seeIF = true;
+                    }    
+                }
+                else{
+                    b2.style.backgroundColor = '#e0e0e0';   
+                }
+            });
+
+            b3.addEventListener('mouseover', () => {
+                event.stopPropagation();
+                
+                if (localStorage.getItem('secondaryColor') != null){
+                    b3.style.backgroundColor = localStorage.getItem('secondaryColor');
+                }
+                else{
+                    b3.style.backgroundColor = '#ffffff';
+                }
+            });
+
+            b3.addEventListener('mouseout', () => {
+                event.stopPropagation();
+                
+                if (localStorage.getItem('primaryColor') != null){
+                    b3.style.backgroundColor = localStorage.getItem('primaryColor');
+                }
+                else{
+                    b3.style.backgroundColor = '#e0e0e0';
+                }
+            });
+
+            b4.addEventListener('mouseover', () => {
+                event.stopPropagation();
+                
+                if (localStorage.getItem('secondaryColor') != null){
+                    b4.style.backgroundColor = localStorage.getItem('secondaryColor');
+                }
+                else{
+                    b4.style.backgroundColor = '#ffffff';
+                }
+            });
+
+            b4.addEventListener('mouseout', () => {
+                event.stopPropagation();
+                
+                if (localStorage.getItem('primaryColor') != null){
+                    b4.style.backgroundColor = localStorage.getItem('primaryColor');
+                }
+                else{
+                    b4.style.backgroundColor = '#e0e0e0';
+                }
+            });
+
+            b5.addEventListener('mouseover', () => {
+                event.stopPropagation();
+                
+                if (localStorage.getItem('secondaryColor') != null){
+                    b5.style.backgroundColor = localStorage.getItem('secondaryColor');
+                }
+                else{
+                    b5.style.backgroundColor = '#ffffff';
+                }
+            });
+
+            b5.addEventListener('mouseout', () => {
+                event.stopPropagation();
+                
+                if (localStorage.getItem('primaryColor') != null){
+                    b5.style.backgroundColor = localStorage.getItem('primaryColor');
+                }
+                else{
+                    b5.style.backgroundColor = '#e0e0e0';
+                }
+            });
+        }
+        const plan1 = document.getElementById("plan-1");
+        const plan2 = document.getElementById("plan-2");
+        const plan3 = document.getElementById("plan-3");
+        const text4 = document.getElementById("text-4");
+
+        document.body.onload = function() {
+            event.stopPropagation();
+            var planOld = JSON.parse(localStorage.getItem("planSelected"));
+            localStorage.setItem("planOld", planOld)
+
+            if (localStorage.getItem("planSelected") != null){
+                var planSelected = JSON.parse(localStorage.getItem("planSelected"));
+                window[`changePlan${planSelected}`]();
+            }
+            else{
+                localStorage.setItem("planSelected", 1)
+                var planSelected = JSON.parse(localStorage.getItem("planSelected"));
+                changePlan1();
+            }
+
+
+        }
+        
+        plan1.onclick = function() {
+            event.stopPropagation();
+            localStorage.setItem("planSelected", 1)
+            changePlan1();
+        }
+
+        plan2.onclick = function() {
+            event.stopPropagation();
+            localStorage.setItem("planSelected", 2)
+            changePlan2();
+        }
+
+        plan3.onclick = function() {
+            event.stopPropagation();
+            localStorage.setItem("planSelected", 3)
+            changePlan3();
+        }
+
+
+        function changePlan1() {
+            plan1.style.backgroundColor = "#9c9c9c";
+            plan2.style.backgroundColor = "#e0e0e0";
+            plan3.style.backgroundColor = "#e0e0e0";
+        }
+
+        function changePlan2() {
+            plan2.style.backgroundColor = "#9c9c9c";
+            plan1.style.backgroundColor = "#e0e0e0";
+            plan3.style.backgroundColor = "#e0e0e0";
+        }
+        function changePlan3() {
+            plan3.style.backgroundColor = "#9c9c9c";
+            plan2.style.backgroundColor = "#e0e0e0";
+            plan1.style.backgroundColor = "#e0e0e0";
+        }
+
+
+
+
+
+
+
+        let clickCount = 0;
+        let clickTimer;
+
+        function clickSee() {
+            clickCount++;
+
+            if (clickTimer) {
+                clearTimeout(clickTimer);
+            }
+
+            clickTimer = setTimeout(() => {
+                clickCount = 0;
+            }, 2000); // Reset count after 2 seconds of inactivity
+
+            if (clickCount === 5) {
+                alert('You clicked 5 times in a row!');
+                clickCount = 0; // Reset after detection
+            }
+        };
+
+
+
+
+
+        document.getElementById("search-container-input").addEventListener("input", function () {
+            const searchTerm = this.value.toLowerCase();
+            const paragraphs = document.querySelectorAll("h2");
+
+
+            // Remove previous highlights
+            paragraphs.forEach(paragraph => {
+                paragraph.innerHTML = paragraph.textContent;
+            });
+
+            // Highlight new matches
+            if (searchTerm) {
+                paragraphs.forEach(paragraph => {
+                    const regex = new RegExp(`(${searchTerm})`, "gi");
+                    paragraph.innerHTML = paragraph.textContent.replace(regex, `<mark>$1</mark>`);
+                });
+            }
+
+            if (searchTerm) {
+                const firstMatch = document.querySelector("mark");
+                if (firstMatch) {
+                    firstMatch.scrollIntoView({ behavior: "smooth", block: "center" });
+                }
+            }
+
+
+
+            // const paragraphs2 = document.querySelectorAll("p");
+            // paragraphs2.forEach(paragraph => {
+            //     paragraph.innerHTML = paragraph.textContent;
+            // });
+
+            // if (searchTerm) {
+            //     paragraphs2.forEach(paragraph => {
+            //         const regex = new RegExp(`(${searchTerm})`, "gi");
+            //         paragraph.innerHTML = paragraph.textContent.replace(regex, `<mark>$1</mark>`);
+            //     });
+            // }
+
+            // if (searchTerm) {
+            //     const firstMatch = document.querySelector("mark");
+            //     if (firstMatch) {
+            //         firstMatch.scrollIntoView({ behavior: "smooth", block: "center" });
+            //     }
+            // }
+
+        });
+    </script>
+    <script src="scripts/main.js"></script>
+</body>
+</html>

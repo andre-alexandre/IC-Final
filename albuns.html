@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria de Fotos</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
+</head>
+
+<body onload="albumLoad();">
+    <header id="topbar">
+        
+        <div id="search-container">
+            <input id="search-container-input" type="text" placeholder="Pesquisar...">
+            <img src="https://img.icons8.com/ios-filled/50/000000/search--v1.png" alt="Lupa">
+        </div>
+
+        <div id="space">
+            <a href="import.html" id="space1"><img src="images/sidebar/import.png"></a>
+            <a onclick="loadSettings(5);" href="settings.html" id="space2"><img src="images/sidebar/help.png"></a>
+        </div>
+    </header>
+
+
+
+    <aside id="sidebar">
+        <div id="voltar" onclick="goToPreviousPage();">Voltar</div>
+        <button onclick="window.location.href='settings.html';">
+            <img id="account" src="images/sidebar/account.jpg" title="Conta">
+        </button>
+
+        <div id="hr-top"></div>
+
+        <button onclick="window.location.href='index.html';">
+            <img id="home" src="images/sidebar/images.png" title="Fotos">
+        </button>
+
+        <button onclick="window.location.href='archive.html';">
+            <img id="archive" src="images/sidebar/albuns.png" title="Álbuns">
+        </button>
+
+        <button onclick="window.location.href='chat.html';">
+            <img id="chat" src="images/sidebar/chat.png" title="Partilhados">
+        </button>
+
+        <button onclick="window.location.href='private.html';">
+            <img id="private" src="images/sidebar/private.png" title="Privado">
+        </button>
+
+        <div id="hr-bottom"></div>
+
+        <button id="last" onclick="window.location.href='settings.html';">
+            <img id="settings-b" src="images/sidebar/settings.png" title="Definições">
+        </button>
+    </aside>
+
+
+    
+    <main id="content">
+
+        <div id="gallery">
+
+            <h1 id="album-title" style="margin-bottom: 0.5em; text-align: center; margin-bottom: 1.5vw;"></h1>
+            <div id="finalGallery">
+
+                <script>
+                    let chooseList = [];
+                    fetch('info/images.json')
+                        .then(response => response.json())
+                        .then(data => {
+
+                            
+
+                            const currentLink= window.location.href
+                            const currentAlbum = currentLink.split('=').pop().split('.').shift();
+
+                            const decodedInput = decodeURIComponent(currentAlbum);
+                            const parts = decodedInput.split('/');
+
+                            const currentPath = 'images/galeria/'+String(currentAlbum)+'/';
+
+                            
+                            const Data = data[0][parts[0]][0][parts[1]];
+                            const imageFiles = [];
+                            for (let i = 1; i <= Data; i++) {
+                                let imageFile = `P${i.toString().padStart(3, '0')}.jpg`;
+                                imageFiles.push(imageFile);
+                            }
+
+                            const galleryContainer = document.getElementById('finalGallery');
+
+                            imageFiles.forEach(fileName => {
+                                var checked = 1;
+                                const photoDiv = document.createElement('div');
+                                photoDiv.classList.add('photo');
+
+                                const div1 = document.createElement('div');
+                                div1.classList.add('selected-b');
+
+                                const div2 = document.createElement('div');
+                                div2.classList.add('selected2');
+
+
+                                photoDiv.addEventListener('mouseover', () => {
+                                    photoDiv.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.6)';
+                                });
+
+                                photoDiv.addEventListener('mouseout', () => {
+                                    photoDiv.style.boxShadow = '0 0 0';
+
+                                    if (checked==1){
+                                        div2.style.backgroundColor = 'transparent';
+                                    }
+                                    else{
+                                    }
+                                });
+                                
+
+                                div2.appendChild(div1);
+                    
+                                const imgElement = document.createElement('img');
+                                imgElement.src = currentPath+`${fileName}`;
+                                imgElement.alt = `Photo: ${fileName}`;
+                    
+                                photoDiv.appendChild(div2);
+                                photoDiv.appendChild(imgElement);
+                    
+                                galleryContainer.appendChild(photoDiv);
+                            });
+                        })
+
+                        .catch(error => {
+                            console.error('Error loading JSON:', error);
+                        });
+
+
+                        document.getElementById('finalGallery').addEventListener('click', function (event) {
+                            if (event.target.tagName === 'IMG') {
+                                const fileN = event.target.src.split('galeria/').pop();
+                                window.location.href = `images.html?image=${fileN}`;
+                            }
+                        });
+
+                        function redirectToPageS(page, info) {
+                            let array = JSON.stringify(info);
+                            console.log(array);
+                            localStorage.setItem('chooseList', array);
+                            window.location.href = page;
+                        }
+
+                        
+                </script>
+            
+            </div>
+        </div>
+    </main>
+
+
+
+    <script src="scripts/main.js"></script>
+</body>
+</html>

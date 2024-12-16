@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria de Fotos</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+
+<body onload="cleanChoose();">
+    <header id="topbar">
+        
+        <div id="search-container">
+            <input id="search-container-input" type="text" placeholder="Pesquisar...">
+            <img src="https://img.icons8.com/ios-filled/50/000000/search--v1.png" alt="Lupa">
+        </div>
+
+        <div id="space">
+            <a href="import.html" id="space1"><img src="images/sidebar/import.png"></a>
+            <a onclick="loadSettings(5);" href="settings.html" id="space2"><img src="images/sidebar/help.png"></a>
+        </div>
+    </header>
+
+
+
+    <aside id="sidebar">
+        <!-- <div id="continuar" onclick="redirectToPage('more.html')">Continuar</div> -->
+        <div id="continuar" onclick="popUp(1);">Continuar</div>
+        <div id="voltar" onclick="popUp(0);">Voltar</div>
+        <!-- <div id="voltar" onclick="goToPreviousPage();">Voltar</div> -->
+
+        <button onclick="window.location.href='settings.html';" onmouseover="preloadPage('settings.html')">
+            <img id="account" src="images/sidebar/account.jpg" title="Conta">
+        </button>
+
+        <div id="hr-top"></div>
+
+        <button onclick="window.location.href='index.html';" onmouseover="preloadPage('index.html')">
+            <img id="home-a" src="images/sidebar/images.png" title="Fotos">
+        </button>
+
+        <button onclick="window.location.href='archive.html';" onmouseover="preloadPage('archive.html')">
+            <img id="archive" src="images/sidebar/albuns.png" title="Álbuns">
+        </button>
+
+        <button onclick="window.location.href='private.html';" onmouseover="preloadPage('private.html')">
+            <img id="private" src="images/sidebar/private.png" title="Privado">
+        </button>
+
+        <button onclick="window.location.href='trash.html';" onmouseover="preloadPage('chat.html')">
+            <img id="chat" src="images/sidebar/trash.png" title="Partilhados">
+        </button>
+
+        <div id="hr-bottom"></div>
+
+        <button id="last" onclick="window.location.href='settings.html';" onmouseover="preloadPage('settings.html')">
+            <img id="settings-b" src="images/sidebar/settings.png" title="Definições">
+        </button>
+    </aside>
+
+
+    <div id="popUp">
+        <div id="whiteBack">
+            <h2 style="text-align: center; margin-top: 0.2em; margin-bottom: 0.2em;">Deseja importar as fotografias que selecionou?</h2>
+        </div>
+        
+        <div id="whiteBack1">
+            <div style="text-align: center; margin-top: 2.1em;">
+                <span id="escolher" onclick="popUp(0);">Não</span>
+                <span id="escolher" onclick="redirectToPage('import-options.html')">Sim</span>
+            </div>
+        </div>
+
+    </div>
+
+    
+    <main id="content">
+        <div id="albuns">
+
+
+        </div>
+    </main>
+
+    <script>
+        function cleanChoose(){
+            localStorage.setItem("chooseList", JSON.stringify(chooseList));
+        }
+
+        var check = false
+
+        function popUp(num){
+            var choose = JSON.parse(localStorage.getItem("chooseList"));
+            if (num == 1 ){
+                console.log(choose.length);
+                if (choose.length == 0){
+                    alert("Nenhuma imagem foi escolhida.");
+                }
+
+                else{
+                    document.getElementById("continuar").style.filter = "blur(5px)";
+                    document.getElementById("content").style.filter = "blur(5px)";
+                    document.getElementById("content").style.pointerEvents = "none";
+                    document.getElementById("popUp").style.visibility="visible";
+                    check = true;
+                }
+            }
+
+            else{
+                if (check==true){
+                    document.getElementById("continuar").style.filter = "blur(0px)";
+                    document.getElementById("content").style.filter = "blur(0px)";
+                    document.getElementById("content").style.pointerEvents = "visible";
+                    document.getElementById("popUp").style.visibility="hidden";
+                    check = false;
+                }
+                else{
+                    goToPreviousPage();
+                }
+
+            }
+        }
+        
+        let currentMatchIndex = -1; // Tracks the current match index
+        let matches = []; // Stores all match elements
+
+        document.getElementById("search-container-input").addEventListener("input", function () {
+            const searchTerm = this.value.toLowerCase();
+            const paragraphs = document.querySelectorAll("h3");
+
+            // Reset matches and highlights
+            matches = [];
+            currentMatchIndex = -1;
+            paragraphs.forEach(paragraph => {
+                paragraph.innerHTML = paragraph.textContent;
+            });
+
+            // Highlight new matches and store them
+            if (searchTerm) {
+                paragraphs.forEach(paragraph => {
+                    const regex = new RegExp(`(${searchTerm})`, "gi");
+                    paragraph.innerHTML = paragraph.textContent.replace(regex, `<mark>$1</mark>`);
+                });
+
+                // Find all matches and store them
+                matches = Array.from(document.querySelectorAll("mark"));
+
+                // Scroll to the first match if it exists
+                if (matches.length > 0) {
+                    currentMatchIndex = 0;
+                    matches[currentMatchIndex].scrollIntoView({ behavior: "smooth", block: "center" });
+                }
+            }
+        });
+
+        var chooseList = [];
+
+        const params = new URLSearchParams(window.location.search);
+        const importName = params.get('app');
+        console.log(importName);
+
+        const body = document.body;
+        const loginHeader = document.querySelector('.login-header');
+        const loginButton = document.querySelector('#loginButton');
+
+        if (importName) {
+            const platform = importName.split('.')[0].toLowerCase();
+            
+            fetch('info/images.json')
+                .then(response => response.json())
+                .then(data => {
+                    
+                    const Data = data[0][platform][0];
+                    const List = Object.keys(Data);
+
+                    const albuns = List;
+                    const container = document.getElementById('albuns');
+             
+                    albuns.forEach(fileName => {       
+                        var checked = 1;
+                        const album = document.createElement('div');
+                        album.classList.add('album');
+                        album.setAttribute("onclick", `seeTitle2('${platform}/${String(fileName)}');`);
+
+                        const div1 = document.createElement('div');
+                        div1.classList.add('selected-b');
+
+                        const div2 = document.createElement('div');
+                        div2.classList.add('selected');
+
+                        div2.addEventListener('mouseover', () => {
+                            event.stopPropagation();
+                            album.style.boxShadow = '0 0 0';
+                            div1.style.backgroundColor = '#9c9c9c';
+
+                            div2.onclick = function() {
+                            event.stopPropagation();
+                            if (checked==1){
+                                checked = 0;
+                                console.log(data);
+                                console.log(fileName);
+
+                                const numMax = data[0][platform][0][fileName];
+                                console.log(numMax);
+
+                                const fullAlbum = `images/galeria/${platform}/${String(fileName)}/`;
+
+                                
+                                for (let i = 1; i <= numMax; i++) {
+                                    let imageFile = `P${i.toString().padStart(3, '0')}.jpg`;
+                                    chooseList.push(fullAlbum+imageFile);
+                                }
+                                localStorage.setItem("chooseList", JSON.stringify(chooseList));
+
+                                div1.style.backgroundColor = '#3d3d3d';
+                            }
+                            else{
+                                checked = 1;
+                                div1.style.backgroundColor = 'transparent';
+                            }
+
+                        };
+                        });
+
+                        div2.addEventListener('mouseout', () => {
+                            if (checked==1){
+                                album.style.boxShadow = '0 0 0';
+                                div1.style.backgroundColor = 'transparent';
+                            }
+                            else{
+                                album.style.boxShadow = '0 0 0';
+                                div1.style.backgroundColor = '#3d3d3d';
+                            }
+                        });
+
+                        album.addEventListener('mouseover', () => {
+                            album.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.6)';
+                        });
+
+                        album.addEventListener('mouseout', () => {
+                            album.style.boxShadow = '0 0 0';
+                        });
+                        
+
+                        div2.appendChild(div1);
+
+                        const img1 = document.createElement('img');
+                        img1.src = `images/galeria/${platform}/${String(fileName)}/P001.jpg`;
+                        img1.alt = "Descrição da Foto";
+
+                        const img2 = document.createElement('img');
+                        img2.src = `images/galeria/${platform}/${String(fileName)}/P002.jpg`;
+                        img2.alt = "Descrição da Foto";
+
+                        const img3 = document.createElement('img');
+                        img3.src = `images/galeria/${platform}/${String(fileName)}/P003.jpg`;
+                        img3.alt = "Descrição da Foto";
+
+                        const img4 = document.createElement('img');
+                        img4.src = `images/galeria/${platform}/${String(fileName)}/P004.jpg`;
+                        img4.alt = "Descrição da Foto";
+
+                        // Append images to the album div
+                        album.appendChild(div2);
+                        album.appendChild(img1);
+                        album.appendChild(img2);
+                        album.appendChild(img3);
+                        album.appendChild(img4);
+            
+                        // Create the img element
+                        const textElement = document.createElement('h3');
+                        textElement.textContent = fileName;
+                        textElement.title = "facebook/"+fileName;
+                        
+            
+                        // Append the img to the div
+                        album.appendChild(textElement);
+            
+                        // Append the div to the gallery container
+                        container.appendChild(album);
+                    });  
+                })
+                .catch(error => {
+                    console.error('Error loading JSON:', error);
+                });
+        } 
+
+
+
+
+        // Add event listener to the login button to close the current window and navigate in the opener
+        loginButton.addEventListener('click', () => {
+            if (window.opener) {
+                const currentLink= window.location.href
+                const currentApp = currentLink.split('=').pop().split('.').shift();
+                console.log(currentApp);
+                window.opener.location.href =`import-choose.html?app=${currentApp}`;
+                window.close(); // Close the current window
+            } else {
+                alert('This window was not opened by another page, so it cannot navigate the opener.');
+            }
+        });
+
+    </script>
+
+
+
+    <script src="scripts/main.js"></script>
+</body>
+</html>

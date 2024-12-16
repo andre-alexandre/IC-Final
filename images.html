@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imagem</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #fff;
+            color: #000;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            transition: all 0.5s ease;
+            width: 100%;
+            position: relative;
+            justify-content: center;
+        }
+
+        .info-text {
+            /* text-align: left;
+            margin-left: 4em; */
+            column-gap: 10px; /* Espaço entre os itens */
+        }
+
+        .info-text .label{
+            font-weight: bold;
+        }
+
+
+
+        .image-container {
+            display: flex;
+            justify-content: center;
+            margin-right: 30%;
+            max-width: 650px;
+            align-items: center;
+            flex: 7;
+            position: relative;
+            transition: all 0.5s ease;
+        }
+
+        .image-container img {
+            max-width: 90%;
+            max-height: 90%;
+            border: 0.5em solid #9c9c9c;
+            border-radius: 1em;
+            background-color: #000;
+            transition: transform 0.3s ease, transform-origin 0.3s ease;
+            image-rendering: auto;
+        }
+
+        .info-container div {
+            margin-bottom: 2em;
+        }
+
+        .edit-container{
+            margin-top: 6vh;
+            border-radius: 1em;
+            margin-right: 2em;
+            right: 0; /* Position edit container on the right */
+            position: absolute;
+            height: 85%;
+            flex: 0;
+            opacity: 0;
+            width: 30%;
+            padding: 10px;
+            visibility: hidden;
+            background-color: #e0e0e0;
+            transition: width 0.2s ease, opacity 0.2s ease, visibility 0s 0.2s;
+            overflow-y: scroll;
+            border: #9c9c9c 0.2em solid;
+            border-left: #9c9c9c 0.6em solid;
+            z-index: 20;
+
+        }
+
+        .info-container{
+            margin-top: 6vh;
+            border-radius: 1em;
+            margin-right: 2em;
+            right: 0; /* Position edit container on the right */
+            position: absolute;
+            height: 85%;
+            flex: 0;
+            width: 30%;
+            opacity: 1;
+            padding: 10px;
+            visibility: visible;            
+            background-color: #e0e0e0;
+            transition: width 0.2s ease, opacity 0.2s ease, visibility 0s 0.2s;
+            overflow-y: scroll;
+            border: #9c9c9c 0.2em solid;
+            border-left: #9c9c9c 0.6em solid;
+            z-index: 20;
+        }
+
+        #leftButton img, #rightButton img{
+            position: absolute;
+            color: #9c9c9c;
+            background-color: transparent;
+            font-family: Arial, sans-serif;
+            font-size: large;
+            font-weight: 700;
+            border-radius: 1000em;
+            cursor: pointer;
+            z-index: 20;
+            border: none;
+            height: 40px;
+            width: 40px;
+            border: none;
+            box-shadow: none; /* Shadow acts like a border */
+            top:44%;
+            padding: 10px;
+        }
+
+        #leftButton:hover img, #rightButton:hover img{
+            background-color: #e0e0e0;
+            padding: 10px;
+        }
+
+        #leftButton img{
+            left: 7.5%;
+        }
+
+        #rightButton img{
+            right: 41%;
+        }
+
+
+
+        #editButton img, #infoButton img{
+            position: absolute;
+            right: 36%;
+            background-color: #e0e0e0;
+            font-family: Arial, sans-serif;
+            font-size: large;
+            font-weight: 700;
+            border-radius: 1000em;
+            cursor: pointer;
+            z-index: 20;
+            border: none;
+            height: 28px;
+            width: 28px;
+            border: 8px solid #e0e0e0;
+            box-shadow: 0 0 0 3px #9c9c9c; /* Shadow acts like a border */
+        }
+
+        #infoButton img{
+            top: 40%;
+        }
+
+        #editButton img{
+            top: 50%;
+        }
+
+        #editButton:hover img, #infoButton:hover img{
+            background-color: #9c9c9c;
+            border: 10px solid #9c9c9c;
+
+        }
+
+        button{
+            background-color: transparent;
+            border: none;
+        }
+
+
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .controls label {
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        input[type="range"] {
+            width: 100%;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 10px;
+            border-radius: 5px;
+            outline: none;
+            margin-top: 5px;
+            transition: background 0.3s ease;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border: 2px solid #9c9c9c;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border: 2px solid #9c9c9c;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        #resetButton{
+            padding: 15px;
+            margin-top: 20px;
+            font-size: medium;
+            font-weight: 600;
+            border: none;
+            background-color: #9c9c9c;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #resetButton:hover {
+            background-color: #fff;
+        }
+
+        #backButton{
+            font-weight: 700;
+            font-size: large;
+            z-index: 30;
+            position: fixed;
+            bottom: 2vw;
+            left: 2em;
+            border: #9c9c9c 5px solid;
+            padding: 1vw;
+            background-color: #e0e0e0;
+            border-radius: 1em;
+            cursor: pointer;
+        }
+
+        #backButton:hover {
+            background-color: #9c9c9c;
+        }
+
+        #infoContainer-0, #infoContainer-1, #infoContainer-2, #infoContainer-3, #infoContainer-4, #infoContainer-5, #infoContainer-6, #infoContainer-7, #infoContainer-8, #infoContainer-9{
+            display: none;
+        }
+
+
+        
+/* Scrollbars */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #9c9c9c;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* ::-webkit-scrollbar-thumb:hover {
+    background: #9c9c9c;
+} */
+
+::-webkit-scrollbar-button:end {
+    height: 5%;
+    display: block;
+    background: transparent;
+}
+
+::-webkit-scrollbar-button:start {
+    height: 5%;
+    display: block;
+    background: transparent;
+}
+
+    </style>
+</head>
+<body onload="selectInfo(); buttonSee(); colorSee();">
+    <div class="container" id="container">
+        <div id="editContainer" class="edit-container">
+            <h2>Edit Image</h2>
+            <div class="controls">
+                <div>
+                    <label>Zoom:</label>
+                    <input type="range" min="1" max="3" step="0.1" value="1" id="zoomRange" onchange="updateZoom(this.value)">
+                </div>
+                <div>
+                    <label>Rodar:</label>
+                    <input type="range" min="0" max="360" step="1" value="0" id="rotateRange" onchange="updateRotation(this.value)">
+                </div>
+                <div>
+                    <label>Brilho:</label>
+                    <input type="range" min="50" max="150" step="1" value="100" id="brightnessRange" onchange="updateBrightness(this.value)">
+                </div>
+                <div>
+                    <label>Contraste:</label>
+                    <input type="range" min="50" max="150" step="1" value="100" id="contrastRange" onchange="updateContrast(this.value)">
+                </div>
+                <div>
+                    <label>Escala de Cinzento:</label>
+                    <input type="range" id="grayscaleRange" min="0" max="100" step="1" value="0">
+                </div>
+                <div>
+                    <label>Saturação:</label>
+                    <input type="range" id="saturationRange" min="0" max="200" step="1" value="100">
+                </div>
+                <div>
+                    <label>Matiz:</label>
+                    <input type="range" id="hueRotationRange" min="0" max="360" step="1" value="0">
+                </div>
+            </div>
+            <button id="resetButton" onclick="resetSettings()">Reset</button>
+        </div>
+
+        <div class="image-container" id="imageContainer">
+            <script>
+                const params = new URLSearchParams(window.location.search);
+                const imageName = params.get('image');
+                let img, scale = 1, rotation = 0, brightness = 100, contrast = 100;
+
+                function updateSliderBackground(slider) {
+                    const value = slider.value; // Current slider value
+                    const min = slider.min || 0; // Minimum value
+                    const max = slider.max || 100; // Maximum value
+
+                    // Calculate percentage
+                    const percentage = ((value - min) / (max - min)) * 100;
+
+                    // Update the slider's background
+                    slider.style.background = `linear-gradient(to right, #9c9c9c ${percentage}%, #fff ${percentage}%)`;
+                }
+
+                // Select all sliders and attach input event listener
+                document.querySelectorAll('input[type="range"]').forEach(slider => {
+                    slider.addEventListener('input', () => updateSliderBackground(slider));
+
+                    // Set initial background on page load
+                    updateSliderBackground(slider);
+                });
+
+                if (imageName) {
+                    img = document.createElement('img');
+                    img.src = `images/galeria/${imageName}`;
+                    document.getElementById('imageContainer').appendChild(img);
+
+                    img.addEventListener('wheel', function(event) {
+                        event.preventDefault();
+
+                        const zoomIntensity = 0.1;
+                        const rect = img.getBoundingClientRect();
+
+                        const mouseX = event.clientX - rect.left;
+                        const mouseY = event.clientY - rect.top;
+
+                        const originX = (mouseX / rect.width) * 100;
+                        const originY = (mouseY / rect.height) * 100;
+
+                        if (event.deltaY < 0) {
+                            lastTransformOrigin = `${originX}% ${originY}%`;
+                            img.style.transformOrigin = lastTransformOrigin;
+                            scale += zoomIntensity;
+                        } else {
+                            scale -= zoomIntensity;
+                            if (scale < 1) scale = 1;
+                            img.style.transformOrigin = lastTransformOrigin;
+                        }
+
+                        img.style.transform = `scale(${scale})`;
+                    });
+                }
+
+
+
+                // Toggle the info visibility
+                function toggleInfo() {
+                    const numm = window.location.href.split('/');
+                    const numSee = numm[numm.length - 1].split('.')[0].split('P')[1];
+                    const numLast = parseInt(numSee.substring(numSee.length - 1));
+                    
+                    const infoContainer = document.getElementById(`infoContainer-${numLast}`);
+                    const editContainer = document.getElementById('editContainer');
+                    const infoButton = document.getElementById('infoButton');
+                    const editButton = document.getElementById('editButton');
+                    const container = document.getElementById('container');
+
+                    // Hide the edit container if it's visible when toggling info
+                    editContainer.style.visibility ="hidden";
+                    editContainer.style.opacity =0;
+                    infoContainer.style.visibility ="visible";
+                    infoContainer.style.opacity =1;
+                    
+                };
+
+                function colorSee(){
+                    if (localStorage.getItem('primaryColor') != null){
+                        document.body.style.backgroundColor = localStorage.getItem('primaryColor');
+                        const divS = document.querySelectorAll('.info-container > div');
+                        divS.forEach(div => {
+                            div.style.backgroundColor = localStorage.getItem('primaryColor');
+                        });
+
+                    }    
+                    
+                    else{
+                        document.body.style.backgroundColor = '#ffffff';   
+                        const divS = document.querySelectorAll('.info-container > div');
+
+                        divS.forEach(div => {
+                            div.style.backgroundColor = "#ffffff";
+                        });
+                    }
+
+
+
+                    if (localStorage.getItem('secondaryColor') != null){
+                        const DIV = document.querySelectorAll('.info-container')
+                        DIV.forEach(div => {
+                            div.style.backgroundColor = localStorage.getItem('secondaryColor');
+                        });
+
+                        const DIV1 = document.querySelectorAll('.edit-container')
+                        DIV1.forEach(div => {
+                            div.style.backgroundColor = localStorage.getItem('secondaryColor');
+                        });
+
+                        const b = document.querySelectorAll('.b');
+                        b.forEach(div => {
+                            div.style.backgroundColor = localStorage.getItem('primaryColor');
+                        });
+
+                        const bm = document.querySelectorAll('.b img');
+                        bm.forEach(div => {
+                            div.style.backgroundColor = localStorage.getItem('primaryColor');
+                            div.style.borderColor = localStorage.getItem('primaryColor');
+                        });
+                    }    
+                    
+                    else{
+                        const DIV = document.querySelectorAll('.info-container')
+                        DIV.forEach(div => {
+                            div.style.backgroundColor = "#e0e0e0";
+                        });
+
+                        const DIV1 = document.querySelectorAll('.edit-container')
+                        DIV1.forEach(div => {
+                            div.style.backgroundColor = "#e0e0e0";
+                        });
+
+                        const b = document.querySelectorAll('.b');
+                        b.forEach(div => {
+                            div.style.backgroundColor = "#e0e0e0";
+                        });
+
+                        const bm = document.querySelectorAll('.b img');
+                        bm.forEach(div => {
+                            div.style.backgroundColor = "#e0e0e0";
+                            div.style.borderColor = "#e0e0e0";
+                        });
+                    }
+
+
+
+                    if (localStorage.getItem('detailColor') != null){
+                        const DIV = document.querySelectorAll('.info-container')
+                        DIV.forEach(div => {
+                            div.style.borderColor = localStorage.getItem('detailColor');
+                        });
+
+                        const DIV1 = document.querySelectorAll('.edit-container')
+                        DIV1.forEach(div => {
+                            div.style.borderColor = localStorage.getItem('detailColor');
+                        });
+
+                        const b = document.querySelectorAll('.b');
+                        b.forEach(div => {
+                            div.style.borderColor = localStorage.getItem('detailColor');
+                        });
+
+                        const bm = document.querySelectorAll('.b img');
+                        bm.forEach(div => {
+                            div.style.boxShadow = "0 0 0 3px " + localStorage.getItem('detailColor');
+                        });
+
+
+                        let styleElement = document.querySelector('style[data-scrollbar]');
+
+                        if (!styleElement) {
+                            styleElement = document.createElement('style');
+                            styleElement.setAttribute('data-scrollbar', 'true'); 
+                            document.head.appendChild(styleElement);
+                        }
+
+                        styleElement.textContent = `
+                            ::-webkit-scrollbar-thumb {
+                                background-color: ${localStorage.getItem('detailColor')};
+                            }
+                        `;
+
+                        const imag = document.querySelectorAll('.image-container img');
+                        imag.forEach(img => {
+                            img.style.borderColor = localStorage.getItem('detailColor');
+                        });
+                    }    
+                    
+                    else{
+                        const DIV = document.querySelectorAll('.info-container')
+                        DIV.forEach(div => {
+                            div.style.backgroundColor = "#9c9c9c";
+                        });
+
+                        const DIV1 = document.querySelectorAll('.edit-container')
+                        DIV1.forEach(div => {
+                            div.style.borderColor = "#9c9c9c";
+                        });
+
+                        const b = document.querySelectorAll('.b');
+                        b.forEach(div => {
+                            div.style.borderColor = "#9c9c9c";
+                        });
+
+                        const bm = document.querySelectorAll('.b img');
+                        bm.forEach(div => {
+                            div.style.boxShadow = "0 0 0 3px " + "#9c9c9c";
+                        });
+
+                        
+                        let styleElement = document.querySelector('style[data-scrollbar]');
+
+                        if (!styleElement) {
+                            styleElement = document.createElement('style');
+                            styleElement.setAttribute('data-scrollbar', 'true'); 
+                            document.head.appendChild(styleElement);
+                        }
+
+                        styleElement.textContent = `
+                            ::-webkit-scrollbar-thumb {
+                                background-color: #9c9c9c;
+                            }
+                        `;
+                    }
+
+
+
+                    if (localStorage.getItem('bordersPri') != null){
+                        const b = document.querySelectorAll('.b1');
+                        b.forEach(div => {
+                            div.style.backgroundColor = localStorage.getItem('bordersPri');
+                        });
+
+                        const bm = document.querySelectorAll('.b img');
+                        bm.forEach(div => {
+                            div.style.backgroundColor = localStorage.getItem('bordersPri');
+                            div.style.borderColor = localStorage.getItem('bordersPri');
+                        });
+                    }    
+                    
+                    else{
+                        const b = document.querySelectorAll('.b1');
+                        b.forEach(div => {
+                            div.style.backgroundColor = "#e0e0e0";
+                        });
+
+                        const bm = document.querySelectorAll('.b img');
+                        bm.forEach(div => {
+                            div.style.backgroundColor = "#e0e0e0";
+                            div.style.borderColor = "#e0e0e0";
+                        });
+                    }
+
+
+
+
+                    if (localStorage.getItem('bordersSec') != null){
+                        const b = document.querySelectorAll('.b1');
+                        b.forEach(div => {
+                            div.style.borderColor = localStorage.getItem('bordersSec');
+                        });
+
+                        const bm = document.querySelectorAll('.b img');
+                        bm.forEach(div => {
+                            div.style.boxShadow = "0 0 0 3px " + localStorage.getItem('bordersSec');
+                        });
+                    }    
+                    
+                    else{
+                        const b = document.querySelectorAll('.b1');
+                        b.forEach(div => {
+                            div.style.borderColor = "#9c9c9c";
+                        });
+
+                        const bm = document.querySelectorAll('.b img');
+                        bm.forEach(div => {
+                            div.style.boxShadow = "0 0 0 3px " + "#9c9c9c";
+                        });
+                    }
+
+
+
+
+
+
+                    if (localStorage.getItem('textColor') != null){
+                        document.body.style.color = localStorage.getItem('textColor')
+                    }    
+                    
+                    else{
+                        document.body.style.color = "#000";
+                    }
+
+
+                }
+                
+
+                // Toggle the info visibility
+                function selectInfo() {
+                    const numm = window.location.href.split('/');
+                    const numSee = numm[numm.length - 1].split('.')[0].split('P')[1];
+                    const numLast = parseInt(numSee.substring(numSee.length - 1));
+                    
+                    const infoContainer = document.getElementById(`infoContainer-${numLast}`);
+                    infoContainer.style.display = 'block';
+                };
+
+                // Toggle the edit mode visibility
+                function toggleEdit() {
+                    const numm = window.location.href.split('/');
+                    const numSee = numm[numm.length - 1].split('.')[0].split('P')[1];
+                    const numLast = parseInt(numSee.substring(numSee.length - 1));
+                    
+                    const infoContainer = document.getElementById(`infoContainer-${numLast}`);
+                    const editContainer = document.getElementById('editContainer');
+                    const infoButton = document.getElementById('infoButton');
+                    const editButton = document.getElementById('editButton');
+                    const container = document.getElementById('container');
+
+                    // Hide the info container if it's visible when toggling edit
+                    infoContainer.style.visibility ="hidden";
+                    infoContainer.style.opacity =0;
+
+                    editContainer.style.visibility ="visible";
+                    editContainer.style.opacity =1;
+                
+                    
+                }
+
+                // Variables for additional options
+                let grayscale = 0; // 0-100 for grayscale percentage
+                let saturation = 100; // 0-200 for saturation percentage
+                let hueRotation = 0; // 0-360 for hue rotation in degrees
+
+                // Function to apply transformations
+                function applyTransform() {
+                    if (img) {
+                        img.style.transform = `scale(${scale}) rotate(${rotation}deg)`;
+                        img.style.filter = `
+                            brightness(${brightness}%) 
+                            contrast(${contrast}%) 
+                            grayscale(${grayscale}%) 
+                            saturate(${saturation}%) 
+                            hue-rotate(${hueRotation}deg)`;
+                    }
+                }
+
+                // Event listeners for dynamic updates
+                document.getElementById('zoomRange').addEventListener('input', (event) => {
+                    updateZoom(event.target.value);
+                });
+
+                document.getElementById('rotateRange').addEventListener('input', (event) => {
+                    updateRotation(event.target.value);
+                });
+
+                document.getElementById('brightnessRange').addEventListener('input', (event) => {
+                    updateBrightness(event.target.value);
+                });
+
+                document.getElementById('contrastRange').addEventListener('input', (event) => {
+                    updateContrast(event.target.value);
+                });
+
+                document.getElementById('grayscaleRange').addEventListener('input', (event) => {
+                    updateGrayscale(event.target.value);
+                });
+
+                document.getElementById('saturationRange').addEventListener('input', (event) => {
+                    updateSaturation(event.target.value);
+                });
+
+                document.getElementById('hueRotationRange').addEventListener('input', (event) => {
+                    updateHueRotation(event.target.value);
+                });
+
+
+
+                function updateZoom(value) {
+                    scale = parseFloat(value);
+                    applyTransform();
+                }
+
+                function updateRotation(value) {
+                    rotation = parseInt(value);
+                    applyTransform();
+                }
+
+                function updateBrightness(value) {
+                    brightness = parseInt(value);
+                    applyTransform();
+                }
+
+                function updateContrast(value) {
+                    contrast = parseInt(value);
+                    applyTransform();
+                }
+                function updateGrayscale(value) {
+                    grayscale = parseInt(value);
+                    applyTransform();
+                }
+
+                function updateSaturation(value) {
+                    saturation = parseInt(value);
+                    applyTransform();
+                }
+
+                function updateHueRotation(value) {
+                    hueRotation = parseInt(value);
+                    applyTransform();
+                }
+
+                // Reset settings to default
+                function resetSettings() {
+                    scale = 1;
+                    rotation = 0;
+                    brightness = 100;
+                    contrast = 100;
+                    grayscale = 0;
+                    saturation = 100;
+                    hueRotation = 0;
+
+
+                    // Reset slider values
+                    document.getElementById('zoomRange').value = 0;
+                    document.getElementById('rotateRange').value = 0;
+                    document.getElementById('brightnessRange').value = 100;
+                    document.getElementById('contrastRange').value = 100;
+                    document.getElementById('grayscaleRange').value = 0;
+                    document.getElementById('saturationRange').value = 100;
+                    document.getElementById('hueRotationRange').value = 0;
+
+                    document.getElementById('zoomRange').style.background = 'linear-gradient(to right, #9c9c9c 0%, #fff 0%)';
+                    document.getElementById('rotateRange').style.background = 'linear-gradient(to right, #9c9c9c 0%, #fff 0%)';
+                    document.getElementById('brightnessRange').style.background = 'linear-gradient(to right, #9c9c9c 50%, #fff 50%)';
+                    document.getElementById('contrastRange').style.background = 'linear-gradient(to right, #9c9c9c 50%, #fff 50%)';
+
+                    document.getElementById('grayscaleRange').style.background = 'linear-gradient(to right, #9c9c9c 0%, #fff 0%)';
+                    document.getElementById('saturationRange').style.background = 'linear-gradient(to right, #9c9c9c 50%, #fff 50%)';
+                    document.getElementById('hueRotationRange').style.background = 'linear-gradient(to right, #9c9c9c 00%, #fff 0%)';
+
+                    applyTransform();
+                }
+
+
+                function goToPreviousPage() {
+                    window.history.back();
+                }
+
+                function buttonSee(){
+                    const numm = window.location.href.split('=')[1];
+                    const completeNum = "images/galeria/"+numm
+                    var orderedImages = JSON.parse(localStorage.getItem("orderedImages"));
+
+                    if (orderedImages.indexOf(completeNum) == 0){
+                        document.getElementById('leftButton').style.visibility = 'hidden';
+                        if (orderedImages.indexOf(completeNum) == orderedImages.length - 1){
+                            document.getElementById('rightButton').style.visibility = 'hidden';
+                        }
+                    }
+                    else if (orderedImages.indexOf(completeNum) == orderedImages.length - 1){
+                        document.getElementById('rightButton').style.visibility = 'hidden';
+                    }
+                    else{
+                        document.getElementById('leftButton').style.visibility = 'visible';
+                        document.getElementById('rightButton').style.visibility = 'visible';
+                    }
+                }
+
+                function leftButton() {
+                    const numm = window.location.href.split('=')[1];
+                    const completeNum = "images/galeria/"+numm
+
+                    var orderedImages = JSON.parse(localStorage.getItem("orderedImages"));
+
+                    const numImage = orderedImages.indexOf(completeNum)-1
+                    const go = orderedImages[numImage].split("galeria/")[1];
+                    window.location.href = "./images.html?image="+go;
+                }
+
+                function rightButton() {
+                    const numm = window.location.href.split('=')[1];
+                    const completeNum = "images/galeria/"+numm
+
+                    var orderedImages = JSON.parse(localStorage.getItem("orderedImages"));
+
+                    const numImage = orderedImages.indexOf(completeNum)+1
+                    const go = orderedImages[numImage].split("galeria/")[1];
+                    window.location.href = "./images.html?image="+go;
+                }
+            </script>
+
+
+
+
+        </div>
+
+        
+        <button id="leftButton" onclick="leftButton();"><img src="images/sidebar/left.png"></button>
+        <button id="rightButton" onclick="rightButton();"><img src="images/sidebar/right.png"></button>
+        <button class="b" id="infoButton" onclick="toggleInfo()"><img src="images/sidebar/info.png"></button>
+        <button class="b" id="editButton" onclick="toggleEdit()"><img src="images/sidebar/edit.png"></button>
+        <button class="b1" id="backButton" onclick="goToPreviousPage();">Voltar</button>
+
+        <div id="infoContainer-0" class="info-container">
+
+            <h2 style="text-align: center;">Metadados</h2>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 18em">
+                <div style=" text-align: center;">
+                    <h3>Localização:</h3>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2718.0434833219356!2d-7.7874493798074695!3d41.1664789980833!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd3b52b27a104fe9%3A0xc441f6a1965dbc98!2sPeso%20da%20R%C3%A9gua!5e1!3m2!1sen!2spt!4v1733936043250!5m2!1sen!2spt" width="90%" height="40%" style="border:0; border-radius: 1vw;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <p>Rua da Azenha Nº54, Peso da Régua</p>
+                    <p style="margin-top: -0.8em;">Peso da Régua, Porto</p>
+                </div>
+            </div>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 5em">
+                <div style="margin-top: -0.5em; text-align: center;">
+                    <div style="display: inline-block; margin-right: 15%;">
+                        <h3>Data</h3>
+                        <p style="margin-top: -0.5em;">10/07/2024</p>
+                    </div>
+                    <div style="display: inline-block; margin-left: 15%;">
+                        <h3>Hora</h3>
+                        <p style="margin-top: -0.5em;">20:17:34</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 14.7em">
+                <div style="margin-top: -0.3em; text-align: center;">
+                    <h3>Dados EXIF</h3>
+                    <div class="info-content">
+                        <p class="info-text" style="margin-left: 0.6em;"><span class="label">Câmera:</span><span style="margin-left: 3.9em;">Nokia 2210</span></p>
+                        <p class="info-text" style="margin-left: -2.1em;"><span class="label">Abertura:</span><span style="margin-left: 3.5em;">f/1.6</span></p>
+                        <p class="info-text" style="margin-left: -2.4em;"><span class="label">ISO:</span><span style="margin-left: 5.9em;">200</span></p>
+                        <p class="info-text" style="margin-left: -1.6em;"><span class="label">Exposição:</span><span style="margin-left: 2.7em;">1/33s</span></p>
+                        <p class="info-text" style="margin-left: 0.55em;"><span class="label">Distância Focal:</span><span style="margin-left: 0.7em;">27.03mm</span></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 6em">                    
+                <div style="margin-top: -0.2em; text-align: center;">
+                    <div style="display: inline-block; margin-right: 12%;">
+                        <h3>Pessoas</h3>
+                        <p>Ninguém</p>
+                    </div>
+                    <div style="display: inline-block; margin-left: 12%;">
+                        <h3>Emoções</h3>
+                        <img src="images/sidebar/neutral.png" style="height: 25px; width: 25px; margin-top: -1em;">
+                    </div>
+                </div>
+            </div>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 12em">
+                <div style=" margin-top: -0.8em; text-align: center;">
+                    <h3>Tipo de Fotografia</h3>
+                    <img src="images/sidebar/nature.png" style="height: 100px; width: 100px; margin-top: -0.4em;">
+                    <p style="margin-top: 0.3em;">Paisagem</p>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div id="infoContainer-1" class="info-container">
+            <h2 style="text-align: center;">Metadados</h2>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 18em">
+                <div style=" text-align: center;">
+                    <h3>Localização:</h3>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d220.3273757068751!2d-7.892319782190973!3d37.0939056403722!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd1aac6a23aa8097%3A0xa8a2568c388366ff!2sR.%20Manuel%20Gago%2021%2C%208005-411%20Faro!5e1!3m2!1sen!2spt!4v1733935335421!5m2!1sen!2spt" width="90%" height="40%" style="border:0; border-radius: 1vw;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <p>Rua Manuel Gago Nº21, Estoí</p>
+                    <p style="margin-top: -0.8em;">Algarve, Faro</p>
+                </div>
+            </div>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 5em">
+                <div style="margin-top: -0.5em; text-align: center;">
+                    <div style="display: inline-block; margin-right: 15%;">
+                        <h3>Data</h3>
+                        <p style="margin-top: -0.5em;">19/07/2024</p>
+                    </div>
+                    <div style="display: inline-block; margin-left: 15%;">
+                        <h3>Hora</h3>
+                        <p style="margin-top: -0.5em;">20:52:49</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 14.7em">
+                <div style="margin-top: -0.3em; text-align: center;">
+                    <h3>Dados EXIF</h3>
+                    <div class="info-content">
+                        <p class="info-text" style="margin-left: 0.6em;"><span class="label">Câmera:</span><span style="margin-left: 3.9em;">iPhone SE</span></p>
+                        <p class="info-text" style="margin-left: -2.1em;"><span class="label">Abertura:</span><span style="margin-left: 3.5em;">f/1.1</span></p>
+                        <p class="info-text" style="margin-left: -2.4em;"><span class="label">ISO:</span><span style="margin-left: 5.9em;">467</span></p>
+                        <p class="info-text" style="margin-left: -1.6em;"><span class="label">Exposição:</span><span style="margin-left: 2.7em;">1/87s</span></p>
+                        <p class="info-text" style="margin-left: 0.9em;"><span class="label">Distância Focal:</span><span style="margin-left: 0.7em;">123.45mm</span></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 8em">
+                <div style="margin-top: -0.2em; text-align: center;">
+                    <div style="display: inline-block; margin-right: 10%;">
+                        <h3>Pessoas</h3>
+                        <p>João Almeida</p>
+                        <p>Maria Loral</p>
+                    </div>
+                    <div style="display: inline-block; margin-left: 10%;">
+                        <h3 style="margin-bottom: 1em;">Emoções</h3>
+                        <img src="images/sidebar/happy.png" style="height: 30px; width: 30px; margin-bottom: 1em;">
+                    </div>
+                </div>
+            </div>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 12em">
+                <div style=" margin-top: -0.8em; text-align: center;">
+                    <h3>Tipo de Fotografia</h3>
+                    <img src="images/sidebar/selfie.png" style="height: 100px; width: 100px; margin-top: -0.4em;">
+                    <p style="margin-top: 0.3em;">Selfie</p>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div id="infoContainer-2" class="info-container">
+            <h2 style="text-align: center;">Metadados</h2>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 18em">
+                <div style=" text-align: center;">
+                    <h3>Localização</h3>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d175.54694118277774!2d-9.253507986140736!3d38.929212385905664!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sen!2spt!4v1733934916553!5m2!1sen!2spt" width="90%" height="40%" style="border:0; border-radius: 1vw;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <p>Rua da Várzea Nº37, Malveira</p>
+                    <p style="margin-top: -0.8em;">Mafra, Lisboa</p>
+                </div>
+            </div>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 5em">
+                <div style="margin-top: -0.5em; text-align: center;">
+                    <div style="display: inline-block; margin-right: 15%;">
+                        <h3>Data</h3>
+                        <p style="margin-top: -0.5em;">02/08/202</p>
+                    </div>
+                    <div style="display: inline-block; margin-left: 15%;">
+                        <h3>Hora</h3>
+                        <p style="margin-top: -0.5em;">22:03:02</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 14.7em">
+                <div style="margin-top: -0.3em; text-align: center;">
+                    <h3>Dados EXIF</h3>
+                    <div class="info-content">
+                        <p class="info-text" style="margin-left: 0.6em;"><span class="label">Câmera:</span><span style="margin-left: 3.9em;">Sony RV100</span></p>
+                        <p class="info-text" style="margin-left: -2.4em;"><span class="label">Abertura:</span><span style="margin-left: 3.5em;">f/1.87</span></p>
+                        <p class="info-text" style="margin-left: -3.1em;"><span class="label">ISO:</span><span style="margin-left: 5.9em;">394</span></p>
+                        <p class="info-text" style="margin-left: -2.2em;"><span class="label">Exposição:</span><span style="margin-left: 2.7em;">1/78s</span></p>
+                        <p class="info-text" style="margin-left: -0.1em;"><span class="label">Distância Focal:</span><span style="margin-left: 0.7em;">33.98mm</span></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 8em">
+                <div style="margin-top: -0.2em; text-align: center;">
+                    <div style="display: inline-block; margin-right: 10%;">
+                        <h3>Pessoas</h3>
+                        <p>Joaquim Mafarrico</p>
+                        <p>António Sonecas</p>
+                    </div>
+                    <div style="display: inline-block; margin-left: 10%;">
+                        <h3 style="margin-bottom: 1em;">Emoções</h3>
+                        <img src="images/sidebar/angry.png" style="height: 30px; width: 30px; margin-bottom: 1em;">
+                    </div>
+                </div>
+            </div>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 12em">
+                <div style=" margin-top: -0.8em; text-align: center;">
+                    <h3>Tipo de Fotografia</h3>
+                    <img src="images/sidebar/group.png" style="height: 100px; width: 100px; margin-top: -0.4em;">
+                    <p style="margin-top: 0.3em;">Grupo</p>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div id="infoContainer-3" class="info-container">
+            <h2 style="text-align: center;">Metadados</h2>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 18em">
+                <div style=" text-align: center;">
+                    <h3>Localização</h3>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d430.8278930699656!2d-9.147248704722735!3d38.75223491785728!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd1932e313e587f3%3A0xafc7fa9e0e1cbedd!2sCampo%20Grande%2C%20Lisbon!5e1!3m2!1sen!2spt!4v1733934420215!5m2!1sen!2spt" width="90%" height="40%" style="border:0; border-radius: 1vw;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <p>Avenida da Igreja Nº58, Campo Grande</p>
+                    <p style="margin-top: -0.8em;">Campo Grande, Lisboa</p>
+                </div>
+            </div>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 5em">
+                <div style="margin-top: -0.5em; text-align: center;">
+                    <div style="display: inline-block; margin-right: 15%;">
+                        <h3>Data</h3>
+                        <p style="margin-top: -0.5em;">10/08/2024</p>
+                    </div>
+                    <div style="display: inline-block; margin-left: 15%;">
+                        <h3>Hora</h3>
+                        <p style="margin-top: -0.5em;">09:28:12</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 14.7em">
+                <div style="margin-top: -0.3em; text-align: center;">
+                    <h3>Dados EXIF</h3>
+                    <div class="info-content">
+                        <p class="info-text" style="margin-left: 1.2em;"><span class="label">Câmera:</span><span style="margin-left: 3.9em;">Xiaomi Note 13</span></p>
+                        <p class="info-text" style="margin-left: -3.3em;"><span class="label">Abertura:</span><span style="margin-left: 3.5em;">f/0.5</span></p>
+                        <p class="info-text" style="margin-left: -3.5em;"><span class="label">ISO:</span><span style="margin-left: 5.9em;">120</span></p>
+                        <p class="info-text" style="margin-left: -1.9em;"><span class="label">Exposição:</span><span style="margin-left: 2.7em;">1/455s</span></p>
+                        <p class="info-text" style="margin-left: -0.3em;"><span class="label">Distância Focal:</span><span style="margin-left: 0.7em;">24.00mm</span></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 6em">
+                <div style="margin-top: -0.2em; text-align: center;">
+                    <div style="display: inline-block; margin-right: 12%;">
+                        <h3>Pessoas</h3>
+                        <p>Ninguém</p>
+                    </div>
+                    <div style="display: inline-block; margin-left: 12%;">
+                        <h3>Emoções</h3>
+                        <img src="images/sidebar/neutral.png" style="height: 25px; width: 25px; margin-top: -1em;">
+                    </div>
+                </div>
+            </div>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 12em">
+                <div style=" margin-top: -0.8em; text-align: center;">
+                    <h3>Tipo de Fotografia</h3>
+                    <img src="images/sidebar/nature.png" style="height: 100px; width: 100px; margin-top: -0.4em;">
+                    <p style="margin-top: 0.3em;">Paisagem</p>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div id="infoContainer-4" class="info-container">
+            <h2 style="text-align: center;">Metadados</h2>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 18em">
+                <div style=" text-align: center;">
+                    <h3>Localização:</h3>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d174.38427892508!2d-9.129679986426686!3d39.39665488150586!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd18b3bdfb9697c7%3A0x3356477a6b5c9eb3!2sR.%20do%20Avenal%2023%2C%20Caldas%20da%20Rainha!5e1!3m2!1sen!2spt!4v1733933695148!5m2!1sen!2spt" width="90%" height="40%" style="border:0; border-radius: 1vw;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <p>Rua Luís Teixeira Nº56, Avenal</p>
+                    <p style="margin-top: -0.8em;">Caldas da Rainha, Leiria</p>
+                </div>
+            </div>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 5em">
+                <div style="margin-top: -0.5em; text-align: center;">
+                    <div style="display: inline-block; margin-right: 15%;">
+                        <h3>Data</h3>
+                        <p style="margin-top: -0.5em;">07/09/2024</p>
+                    </div>
+                    <div style="display: inline-block; margin-left: 15%;">
+                        <h3>Hora</h3>
+                        <p style="margin-top: -0.5em;">19:07:31</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 14.7em">
+                <div style="margin-top: -0.3em; text-align: center;">
+                    <h3>Dados EXIF</h3>
+                    <div class="info-content">
+                        <p class="info-text" style="margin-left: 1em;"><span class="label">Câmera:</span><span style="margin-left: 3.9em;">Samsung A27</span></p>
+                        <p class="info-text" style="margin-left: -3.0em;"><span class="label">Abertura:</span><span style="margin-left: 3.5em;">f/3.2</span></p>
+                        <p class="info-text" style="margin-left: -3.2em;"><span class="label">ISO:</span><span style="margin-left: 5.9em;">270</span></p>
+                        <p class="info-text" style="margin-left: -2.3em;"><span class="label">Exposição:</span><span style="margin-left: 2.7em;">1/77s</span></p>
+                        <p class="info-text" style="margin-left: -0.3em;"><span class="label">Distância Focal:</span><span style="margin-left: 0.7em;">11.86mm</span></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 8em">
+                <div style="margin-top: -0.2em; text-align: center;">
+                    <div style="display: inline-block; margin-right: 10%;">
+                        <h3>Pessoas</h3>
+                        <p>Irmeu da Silva</p>
+                        <p>Marília Vocêlas</p>
+                    </div>
+                    <div style="display: inline-block; margin-left: 10%;">
+                        <h3 style="margin-bottom: 1em;">Emoções</h3>
+                        <img src="images/sidebar/unhappy.png" style="height: 30px; width: 30px; margin-bottom: 1em;">
+                    </div>
+                </div>
+            </div>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 12em">
+                <div style=" margin-top: -0.8em; text-align: center;">
+                    <h3>Tipo de Fotografia</h3>
+                    <img src="images/sidebar/selfie.png" style="height: 100px; width: 100px; margin-top: -0.4em;">
+                    <p style="margin-top: 0.3em;">Selfie</p>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="infoContainer-5" class="info-container">
+            <h2 style="text-align: center;">Metadados</h2>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 18em">
+                <div style=" text-align: center;">
+                    <h3>Localização:</h3>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d420.2785563323703!2d-7.7508754843733465!3d38.45872856000422!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd1755b7c11e662b%3A0x7ffa967aacd9be13!2zUi4gZG8gU29sIDE1LCBTw6NvIE1hbsOnb3M!5e1!3m2!1sen!2spt!4v1733932470807!5m2!1sen!2spt" width="90%" height="40%" style="border:0; border-radius: 1vw;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <p>Rua do Sol Nº32, São Manços</p>
+                    <p style="margin-top: -0.8em;">Ribeirinha, Castelo Branco</p>
+                </div>
+            </div>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 5em">
+                <div style="margin-top: -0.5em; text-align: center;">
+                    <div style="display: inline-block; margin-right: 15%;">
+                        <h3>Data</h3>
+                        <p style="margin-top: -0.5em;">16/09/2024</p>
+                    </div>
+                    <div style="display: inline-block; margin-left: 15%;">
+                        <h3>Hora</h3>
+                        <p style="margin-top: -0.5em;">13:48:42</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 14.7em">
+                <div style="margin-top: -0.3em; text-align: center;">
+                    <h3>Dados EXIF</h3>
+                    <div class="info-content">
+                        <p class="info-text" style="margin-left: 1em;"><span class="label">Câmera:</span><span style="margin-left: 3.9em;">Oppo 32 Plus</span></p>
+                        <p class="info-text" style="margin-left: -3.0em;"><span class="label">Abertura:</span><span style="margin-left: 3.5em;">f/1.6</span></p>
+                        <p class="info-text" style="margin-left: -3.1em;"><span class="label">ISO:</span><span style="margin-left: 5.9em;">990</span></p>
+                        <p class="info-text" style="margin-left: -2.2em;"><span class="label">Exposição:</span><span style="margin-left: 2.7em;">1/54s</span></p>
+                        <p class="info-text" style="margin-left: -0.8em;"><span class="label">Distância Focal:</span><span style="margin-left: 0.7em;">8.63mm</span></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 6em">
+                <div style="margin-top: -0.2em; text-align: center;">
+                    <div style="display: inline-block; margin-right: 12%;">
+                        <h3>Pessoas</h3>
+                        <p>João Visão</p>
+                    </div>
+                    <div style="display: inline-block; margin-left: 12%;">
+                        <h3>Emoções</h3>
+                        <img src="images/sidebar/happy.png" style="height: 25px; width: 25px; margin-top: -1em;">
+                    </div>
+                </div>
+            </div>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 12em">
+                <div style=" margin-top: -0.8em; text-align: center;">
+                    <h3>Tipo de Fotografia</h3>
+                    <img src="images/sidebar/selfie.png" style="height: 100px; width: 100px; margin-top: -0.4em;">
+                    <p style="margin-top: 0.3em;">Selfie</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="infoContainer-6" class="info-container">
+            <h2 style="text-align: center;">Metadados</h2>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 18em">
+                <div style=" text-align: center;">
+                    <h3>Localização:</h3>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d11160.208780066918!2d-8.970703345248074!3d39.399061777323986!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd18bbd02ad3ba43%3A0xf43110d594b76457!2sVenda%20das%20Raparigas%2C%20Benedita!5e1!3m2!1sen!2spt!4v1733926335810!5m2!1sen!2spt" width="90%" height="40%" style="border:0; border-radius: 1vw;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <p>Rua Principal Nº9, Venda das Raparigas</p>
+                    <p style="margin-top: -0.8em;">Boavista, Leiria</p>
+                </div>
+            </div>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 5em">
+                <div style="margin-top: -0.5em; text-align: center;">
+                    <div style="display: inline-block; margin-right: 15%;">
+                        <h3>Data</h3>
+                        <p style="margin-top: -0.5em;">17/09/2024</p>
+                    </div>
+                    <div style="display: inline-block; margin-left: 15%;">
+                        <h3>Hora</h3>
+                        <p style="margin-top: -0.5em;">01:20:51</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 14.7em">
+                <div style="margin-top: -0.3em; text-align: center;">
+                    <h3>Dados EXIF</h3>
+                    <div class="info-content">
+                        <p class="info-text" style="margin-left: 1em;"><span class="label">Câmera:</span><span style="margin-left: 3.9em;">Huawei 10 Pro</span></p>
+                        <p class="info-text" style="margin-left: -3.3em;"><span class="label">Abertura:</span><span style="margin-left: 3.5em;">f/1.9</span></p>
+                        <p class="info-text" style="margin-left: -3.4em;"><span class="label">ISO:</span><span style="margin-left: 5.9em;">180</span></p>
+                        <p class="info-text" style="margin-left: -2.1em;"><span class="label">Exposição:</span><span style="margin-left: 2.7em;">1/256s</span></p>
+                        <p class="info-text" style="margin-left: -1.3em;"><span class="label">Distância Focal:</span><span style="margin-left: 0.7em;">2.57mm</span></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 8em">
+                <div style="margin-top: -0.2em; text-align: center;">
+                    <div style="display: inline-block; margin-right: 10%;">
+                        <h3>Pessoas</h3>
+                        <p>Sónia Vizela</p>
+                        <p>Maria Loral</p>
+                    </div>
+                    <div style="display: inline-block; margin-left: 10%;">
+                        <h3 style="margin-bottom: 1em;">Emoções</h3>
+                        <img src="images/sidebar/angry.png" style="height: 30px; width: 30px; margin-bottom: 1em;">
+                    </div>
+                </div>
+            </div>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 12em">
+                <div style=" margin-top: -0.8em; text-align: center;">
+                    <h3>Tipo de Fotografia</h3>
+                    <img src="images/sidebar/group.png" style="height: 100px; width: 100px; margin-top: -0.4em;">
+                    <p style="margin-top: 0.3em;">Grupo</p>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div id="infoContainer-7" class="info-container">
+            <h2 style="text-align: center;">Metadados</h2>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 18em">
+                <div style=" text-align: center;">
+                    <h3>Localização:</h3>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d709.6592139108355!2d-7.893680986803252!3d38.16818420352431!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd1a0fcba7bb3971%3A0x4983b923274363d5!2sCuba!5e1!3m2!1sen!2spt!4v1733930746780!5m2!1sen!2spt" width="90%" height="40%" style="border:0; border-radius: 1vw;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <p>Rua dos Prazeres Nº41, Cuba</p>
+                    <p style="margin-top: -0.8em;">Cuba, Beja</p>
+                </div>
+            </div>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 5em">
+                <div style="margin-top: -0.5em; text-align: center;">
+                    <div style="display: inline-block; margin-right: 15%;">
+                        <h3>Data</h3>
+                        <p style="margin-top: -0.5em;">20/09/2024</p>
+                    </div>
+                    <div style="display: inline-block; margin-left: 15%;">
+                        <h3>Hora</h3>
+                        <p style="margin-top: -0.5em;">17:09:23</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 14.7em">
+                <div style="margin-top: -0.3em; text-align: center;">
+                    <h3>Dados EXIF</h3>
+                    <div class="info-content">
+                        <p class="info-text"><span class="label">Câmera:</span><span style="margin-left: 3.9em;">GoPro 11</span></p>
+                        <p class="info-text" style="margin-left: -1.9em;"><span class="label">Abertura:</span><span style="margin-left: 3.5em;">f/1.30</span></p>
+                        <p class="info-text" style="margin-left: -2.7em;"><span class="label">ISO:</span><span style="margin-left: 5.9em;">300</span></p>
+                        <p class="info-text" style="margin-left: -1.9em;"><span class="label">Exposição:</span><span style="margin-left: 2.7em;">1/44s</span></p>
+                        <p class="info-text" style="margin-left: 0.3em;"><span class="label">Distância Focal:</span><span style="margin-left: 0.7em;">35.57mm</span></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 6em">
+                <div style="margin-top: -0.2em; text-align: center;">
+                    <div style="display: inline-block; margin-right: 12%;">
+                        <h3>Pessoas</h3>
+                        <p>Ninguém</p>
+                    </div>
+                    <div style="display: inline-block; margin-left: 12%;">
+                        <h3>Emoções</h3>
+                        <img src="images/sidebar/neutral.png" style="height: 25px; width: 25px; margin-top: -1em;">
+                    </div>
+                </div>
+            </div>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 12em">
+                <div style=" margin-top: -0.8em; text-align: center;">
+                    <h3>Tipo de Fotografia</h3>
+                    <img src="images/sidebar/nature.png" style="height: 100px; width: 100px; margin-top: -0.4em;">
+                    <p style="margin-top: 0.3em;">Paisagem</p>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div id="infoContainer-8" class="info-container">
+            <h2 style="text-align: center;">Metadados</h2>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 18em">
+                <div style=" text-align: center;">
+                    <h3>Localização:</h3>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d476.7153079712675!2d-7.493728806402879!3d41.67819722441276!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd3adf6323c891cd%3A0x976469f3fd776653!2sAgostem%2C%20Sesmil%2C%205400-756%20Chaves!5e1!3m2!1sen!2spt!4v1733930607929!5m2!1sen!2spt" width="90%" height="40%" style="border:0; border-radius: 1vw;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <p>Rua da Direita Nº17, Agostem</p>
+                    <p style="margin-top: -0.8em;">Chaves, Vila Real</p>
+                </div>
+            </div>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 5em">
+                <div style="margin-top: -0.5em; text-align: center;">
+                    <div style="display: inline-block; margin-right: 15%;">
+                        <h3>Data</h3>
+                        <p style="margin-top: -0.5em;">21/09/2024</p>
+                    </div>
+                    <div style="display: inline-block; margin-left: 15%;">
+                        <h3>Hora</h3>
+                        <p style="margin-top: -0.5em;">10:35:12</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 14.7em">
+                <div style="margin-top: -0.3em; text-align: center;">
+                    <h3>Dados EXIF</h3>
+                    <div class="info-content">
+                        <p class="info-text"><span class="label">Câmera:</span><span style="margin-left: 3.9em;">iPhone 13</span></p>
+                        <p class="info-text" style="margin-left: -1.9em;"><span class="label">Abertura:</span><span style="margin-left: 3.5em;">f/3.70</span></p>
+                        <p class="info-text" style="margin-left: -2.7em;"><span class="label">ISO:</span><span style="margin-left: 5.9em;">400</span></p>
+                        <p class="info-text" style="margin-left: -1.9em;"><span class="label">Exposição:</span><span style="margin-left: 2.7em;">1/55s</span></p>
+                        <p class="info-text" style="margin-left: 0.3em;"><span class="label">Distância Focal:</span><span style="margin-left: 0.7em;">50.00mm</span></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 8em">
+                <div style="margin-top: -0.2em; text-align: center;">
+                    <div style="display: inline-block; margin-right: 10%;">
+                        <h3>Pessoas</h3>
+                        <p>Mário Carbonara</p>
+                        <p>Maria Carbonara</p>
+                    </div>
+                    <div style="display: inline-block; margin-left: 10%;">
+                        <h3 style="margin-bottom: 1em;">Emoções</h3>
+                        <img src="images/sidebar/happy.png" style="height: 30px; width: 30px; margin-bottom: 1em;">
+                    </div>
+                </div>
+            </div>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 12em">
+                <div style=" margin-top: -0.8em; text-align: center;">
+                    <h3>Tipo de Fotografia</h3>
+                    <img src="images/sidebar/family.png" style="height: 100px; width: 100px; margin-top: -0.4em;">
+                    <p style="margin-top: 0.3em;">Família</p>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div id="infoContainer-9" class="info-container">
+            <h2 style="text-align: center;">Metadados</h2>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 18em">
+                <div style=" text-align: center;">
+                    <h3>Localização:</h3>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d679.7836673685935!2d-7.422017330402618!3d41.14016610819762!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd3b674184fc89e3%3A0x60d85ec7f850ebf8!2sR.%20da%20Silveira%2023%2C%20S%C3%A3o%20Jo%C3%A3o%20da%20Pesqueira!5e1!3m2!1sen!2spt!4v1733930271623!5m2!1sen!2spt" width="90%" height="40%" style="border:0; border-radius: 1vw;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <p>Rua do Canto Nº12, Espinho</p>
+                    <p style="margin-top: -0.8em;">São João da Pesqueira, Viseu</p>
+                </div>
+            </div>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 5em">
+                <div style="margin-top: -0.5em; text-align: center;">
+                    <div style="display: inline-block; margin-right: 15%;">
+                        <h3>Data</h3>
+                        <p style="margin-top: -0.5em;">23/09/2024</p>
+                    </div>
+                    <div style="display: inline-block; margin-left: 15%;">
+                        <h3>Hora</h3>
+                        <p style="margin-top: -0.5em;">13:57:43</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 14.7em">
+                <div style="margin-top: -0.3em; text-align: center; ">
+                    <h3>Dados EXIF</h3>
+                    <p class="info-text"><span class="label">Câmera:</span><span style="margin-left: 3.9em;">Leica XV300</span></p>
+                    <p class="info-text" style="margin-left: -2.9em;"><span class="label">Abertura:</span><span style="margin-left: 3.5em;">f/1.23</span></p>
+                    <p class="info-text" style="margin-left: -3.7em;"><span class="label">ISO:</span><span style="margin-left: 5.9em;">440</span></p>
+                    <p class="info-text" style="margin-left: -2.9em;"><span class="label">Exposição:</span><span style="margin-left: 2.7em;">1/67s</span></p>
+                    <p class="info-text" style="margin-left: -0.7em;"><span class="label">Distância Focal:</span><span style="margin-left: 0.7em;">22.33mm</span></p>
+                </div>
+            </div>
+            
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 6em">
+                <div style="margin-top: -0.2em; text-align: center;">
+                    <div style="display: inline-block; margin-right: 12%;">
+                        <h3>Pessoas</h3>
+                        <p>Ninguém</p>
+                    </div>
+                    <div style="display: inline-block; margin-left: 12%;">
+                        <h3>Emoções</h3>
+                        <img src="images/sidebar/unhappy.png" style="height: 25px; width: 25px; margin-top: -1em;">
+                    </div>
+                </div>
+            </div>
+
+            <div style="background-color: #ffffff; border-radius: 1em; padding-top: 0.4em; width: 90%; margin-left: 5%; height: 12em">
+                <div style=" margin-top: -0.8em; text-align: center;">
+                    <h3>Tipo de Fotografia</h3>
+                    <img src="images/sidebar/nature.png" style="height: 100px; width: 100px; margin-top: -0.4em;">
+                    <p style="margin-top: 0.3em;">Paisagem</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

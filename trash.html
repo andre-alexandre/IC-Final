@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria de Fotos</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
+</head>
+
+<body onload="trashRecover();">
+    <header id="topbar">
+        
+        <div id="search-container">
+            <input id="search-container-input" type="text" placeholder="Pesquisar...">
+            <img src="https://img.icons8.com/ios-filled/50/000000/search--v1.png" alt="Lupa">
+        </div>
+
+        <div id="space">
+            <a href="import.html" id="space1"><img src="images/sidebar/import.png"></a>
+            <a onclick="loadSettings(5);" href="settings.html" id="space2"><img src="images/sidebar/help.png"></a>
+        </div>
+    </header>
+
+
+
+    <aside id="sidebar">
+        <div id="trashPut"><img src="images/sidebar/trash.png"></div>
+
+        <button onclick="window.location.href='settings.html';" onmouseover="preloadPage('settings.html')">
+            <img id="account" src="images/sidebar/account.jpg" title="Conta">
+        </button>
+
+        <div id="hr-top"></div>
+
+        <button onclick="window.location.href='index.html';" onmouseover="preloadPage('index.html')">
+            <img id="home" src="images/sidebar/images.png" title="Fotos">
+        </button>
+
+        <button onclick="window.location.href='archive.html';" onmouseover="preloadPage('archive.html')">
+            <img id="archive" src="images/sidebar/albuns.png" title="Álbuns">
+        </button>
+
+        <button onclick="window.location.href='private.html';" onmouseover="preloadPage('private.html')">
+            <img id="private" src="images/sidebar/private.png" title="Privado">
+        </button>
+
+        <button onclick="window.location.href='trash.html';" onmouseover="preloadPage('chat.html')">
+            <img id="chat-a" src="images/sidebar/trash.png" title="Partilhados">
+        </button>
+
+        <div id="hr-bottom"></div>
+
+        <button id="last" onclick="window.location.href='settings.html';" onmouseover="preloadPage('settings.html')">
+            <img id="settings-b" src="images/sidebar/settings.png" title="Definições">
+        </button>
+    </aside>
+
+
+    
+    <main id="content">
+        <div id="gallery">
+            <h1 id="album-title" style="margin-bottom: 0.5em; text-align: center; margin-bottom: 1.5vw;">Lixo</h1>
+            <div id="finalGallery">
+
+        </div>
+    </main>
+
+
+    <script>
+        function trashRecover() {
+            if (localStorage.getItem("trash") != null) {
+                const imageFiles = JSON.parse(localStorage.getItem("trash"));
+
+                imageFiles.forEach(image => {
+                        console.log(image);
+                        const numm = image.split('/');
+                        const numSee = numm[numm.length - 1].split('.')[0].split('P')[1];
+                        const numLast = 9 - parseInt(numSee.substring(numSee.length - 1));
+                        const date = document.getElementById("finalGallery");
+                        const link = image.split('galeria/')[1];
+
+                        var checked = 1;
+                        
+                        const photoDiv = document.createElement('div');
+                        photoDiv.classList.add('photo');
+
+                        const div1 = document.createElement('div');
+                        div1.classList.add('selected-b');
+
+                        const div2 = document.createElement('div');
+                        div2.classList.add('selected2');
+                        div2.onclick = function() {
+                            event.stopPropagation();
+                            if (checked==1){
+                                checked = 0;
+                                div1.style.backgroundColor = '#3d3d3d';
+                            }
+                            else{
+                                checked = 1;
+                                div1.style.backgroundColor = 'transparent';
+                            }
+
+                        };
+
+                        div2.addEventListener('mouseover', () => {
+                            event.stopPropagation();
+                            photoDiv.style.boxShadow = '0 0 0';
+                            div2.style.backgroundColor = '#ffffff';
+                            div1.style.backgroundColor = '#9c9c9c';
+
+                            div2.onclick = function() {
+                            event.stopPropagation();
+                            if (checked==1){
+                                checked = 0;
+                                div2.style.backgroundColor = '#ffffff';
+                                div1.style.backgroundColor = '#3d3d3d';
+                                trashPut.style.visibility = 'visible';
+                                privatePut.style.visibility = 'visible';
+                                totalClicks = totalClicks + 1;
+                                // trash.push(image);
+                                // console.log(trash);
+                            }
+                            else{
+                                checked = 1;
+
+                                div1.style.backgroundColor = 'transparent';
+                                totalClicks = totalClicks - 1;
+
+                                if (totalClicks == 0){
+                                    privatePut.style.visibility = 'hidden';
+                                    trashPut.style.visibility = 'hidden';
+                                }
+                            }
+
+                        };
+                        });
+
+                        div2.addEventListener('mouseout', () => {
+                            if (checked==1){
+                                photoDiv.style.boxShadow = '0 0 0';
+                                div1.style.backgroundColor = 'transparent';
+                            }
+                            else{
+                                photoDiv.style.boxShadow = '0 0 0';
+                                div1.style.backgroundColor = '#3d3d3d';
+                            }
+                        });
+
+                        photoDiv.addEventListener('mouseover', () => {
+                            photoDiv.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.6)';
+                            div2.style.backgroundColor = '#ffffff';
+                        });
+
+                        photoDiv.addEventListener('mouseout', () => {
+                            photoDiv.style.boxShadow = '0 0 0';
+
+                            if (checked==1){
+                                div2.style.backgroundColor = 'transparent';
+                            }
+                            else{
+                                div2.style.backgroundColor = '#ffffff';
+                            }
+                        });
+                        
+
+                        div2.appendChild(div1);
+
+                        const imgElement = document.createElement('img');
+                        imgElement.src = image;
+                        imgElement.alt = "Photo12";
+                        imgElement.setAttribute("onclick", `goLink('${link}');`);
+            
+                        photoDiv.appendChild(div2);
+                        photoDiv.appendChild(imgElement);
+                        date.appendChild(photoDiv);
+                    });  
+                }
+        }
+    </script>
+    <script type="module" src="scripts/main.js"></script>
+</body>
+</html>
